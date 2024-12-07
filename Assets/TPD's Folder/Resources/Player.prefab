@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3299955108810285439}
   - component: {fileID: 3510175187358882913}
   - component: {fileID: 5048331943333298688}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Glasses
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 1473132633455280841}
   - component: {fileID: 5632245710346978264}
   - component: {fileID: 7811660764443032157}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Crosshair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,8 +191,7 @@ GameObject:
   - component: {fileID: 5954701636010056993}
   - component: {fileID: 7737175866402439721}
   - component: {fileID: 4684593959687565430}
-  - component: {fileID: 8076890167263007025}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -273,66 +272,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1588090984526194393}
   m_Enabled: 1
---- !u!114 &8076890167263007025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1588090984526194393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeTrigger: {fileID: 5954701636010056993}
-  volumeLayer:
-    serializedVersion: 2
-    m_Bits: 4096
-  stopNaNPropagation: 1
-  finalBlitToCameraTarget: 0
-  antialiasingMode: 0
-  temporalAntialiasing:
-    jitterSpread: 0.75
-    sharpness: 0.25
-    stationaryBlending: 0.95
-    motionBlending: 0.85
-  subpixelMorphologicalAntialiasing:
-    quality: 2
-  fastApproximateAntialiasing:
-    fastMode: 0
-    keepAlpha: 0
-  fog:
-    enabled: 1
-    excludeSkybox: 1
-  debugLayer:
-    lightMeter:
-      width: 512
-      height: 256
-      showCurves: 1
-    histogram:
-      width: 512
-      height: 256
-      channel: 3
-    waveform:
-      exposure: 0.12
-      height: 256
-    vectorscope:
-      size: 256
-      exposure: 0.12
-    overlaySettings:
-      linearDepth: 0
-      motionColorIntensity: 4
-      motionGridSize: 64
-      colorBlindnessType: 0
-      colorBlindnessStrength: 1
-  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
-  m_ShowToolkit: 0
-  m_ShowCustomSorter: 0
-  breakBeforeColorGrading: 0
-  m_BeforeTransparentBundles: []
-  m_BeforeStackBundles: []
-  m_AfterStackBundles: []
 --- !u!1 &2161850885129418675
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +282,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9039816781603956780}
   - component: {fileID: 6592152775609876982}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -428,7 +367,7 @@ GameObject:
   - component: {fileID: 5394923625892086986}
   - component: {fileID: 8098095647230210202}
   - component: {fileID: 2810990393435432417}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: RightHand
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -510,7 +449,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8021736155893734027}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -543,7 +482,7 @@ GameObject:
   - component: {fileID: 5049926077543570137}
   - component: {fileID: 3981483769277363125}
   - component: {fileID: 6034770757944174907}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: PlayerName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -719,7 +658,7 @@ GameObject:
   - component: {fileID: 9154215016307166609}
   - component: {fileID: 458420089954523692}
   - component: {fileID: 6170934374487003266}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Reach
   m_TagString: Reach
   m_Icon: {fileID: 0}
@@ -865,7 +804,7 @@ GameObject:
   - component: {fileID: 8358562311682348390}
   - component: {fileID: 2632377613783196262}
   - component: {fileID: 2840986100721988640}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -966,7 +905,7 @@ GameObject:
   - component: {fileID: 7811020456435432549}
   - component: {fileID: 3321288173833240915}
   - component: {fileID: 1746327637164913485}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: FPC
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1063,7 +1002,7 @@ GameObject:
   - component: {fileID: 8894128580491734366}
   - component: {fileID: 3090078396141303203}
   - component: {fileID: 7182549712428411614}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Shirt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1170,7 +1109,7 @@ GameObject:
   - component: {fileID: 3037125210858238830}
   - component: {fileID: 7324497855193745811}
   - component: {fileID: 763683968994437496}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1282,7 +1221,7 @@ GameObject:
   - component: {fileID: 3669129611998273815}
   - component: {fileID: 6235192866684731002}
   - component: {fileID: -5683604220541158071}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1330,7 +1269,7 @@ MonoBehaviour:
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
-    m_Bits: 65536
+    m_Bits: 0
 --- !u!143 &8473314995241434748
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1434,7 +1373,7 @@ GameObject:
   - component: {fileID: 4472620594425664555}
   - component: {fileID: 5073811055834560690}
   - component: {fileID: 6436304876875082210}
-  m_Layer: 9
+  m_Layer: 6
   m_Name: CameraReach
   m_TagString: Player
   m_Icon: {fileID: 0}
