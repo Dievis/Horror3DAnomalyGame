@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - Item
+  - Hour
+  - Breaker
+  - Reach
   layers:
   - Default
   - TransparentFX
@@ -12,7 +16,7 @@ TagManager:
   - ground
   - Water
   - UI
-  - charater
+  - Player
   - Edit
   - done
   - design
