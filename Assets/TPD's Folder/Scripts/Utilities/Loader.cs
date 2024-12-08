@@ -12,20 +12,21 @@ public static class Loader
         SingleplayerScene,
         MultiplayerScene,
         LoadingScene,
-        Lobby,
+        LobbyScene,
         ConnectToServer
     }
 
     private static Scene targetScene;
 
     // Chuyển cảnh cục bộ
-    public static void Load(Scene targetScene)
+    public static void Load(Loader.Scene targetScene)
     {
         Loader.targetScene = targetScene;
 
-        // Nếu là Singleplayer hoặc Offline Scene
-        SceneManager.LoadScene(Scene.LoadingScene.ToString());
+        // Chuyển đến LoadingScene trước khi vào scene đích
+        SceneManager.LoadScene(Loader.Scene.LoadingScene.ToString());
     }
+
 
     // Chuyển cảnh sử dụng Photon PUN 2
     public static void LoadNetwork(Scene targetScene)
@@ -41,13 +42,14 @@ public static class Loader
     {
         if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
         {
-            // Dùng PhotonNetwork.LoadLevel khi đang kết nối mạng
+            // Sau khi vào LoadingScene, load scene Multiplayer thông qua Photon
             PhotonNetwork.LoadLevel(targetScene.ToString());
         }
         else
         {
-            // Dùng SceneManager khi offline hoặc không kết nối Photon
+            // Khi không kết nối Photon, dùng SceneManager để load scene offline
             SceneManager.LoadScene(targetScene.ToString());
         }
     }
+
 }

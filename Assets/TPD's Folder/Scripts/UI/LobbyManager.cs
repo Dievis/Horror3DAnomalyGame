@@ -1,4 +1,4 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
@@ -53,7 +53,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         lobbyPanel.SetActive(false);
         roomPanel.SetActive(true);
-        roomName.text = "Ph�ng: " + PhotonNetwork.CurrentRoom.Name;
+        roomName.text = "Phòng: " + PhotonNetwork.CurrentRoom.Name;
         UpdatePlayerList();
     }
 
@@ -148,7 +148,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void OnClickPlayButton()
     {
-        //PhotonNetwork.LoadLevel("Game");
-        PhotonNetwork.LoadLevel("Scene_A");
+        Loader.LoadNetwork(Loader.Scene.MultiplayerScene);
     }
+
+    public void OnClickBackToMenu()
+    {
+        // Nếu bạn muốn quay về menu, cần phải đảm bảo là đã rời khỏi phòng trước.
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();  // Rời khỏi phòng nếu đang tham gia.
+        }
+
+        // Quay về menu chính sau khi rời phòng (nếu có).
+        Loader.Load(Loader.Scene.MainMenuScene);
+    }
+
 }

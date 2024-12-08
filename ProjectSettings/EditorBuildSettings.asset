@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TPD's Folder/Scenes/MainMenuScene 1.unity
+    path: Assets/TPD's Folder/Scenes/MainMenuScene.unity
     guid: 42ab47cb0f3bc694ca1b233e17850955
   - enabled: 1
     path: Assets/TPD's Folder/Scenes/MainMenuScene.unity
@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/TPD's Folder/Scenes/ConnectToServer.unity
     guid: 70655ffd948efac4b9e4b43dd76049ae
   - enabled: 1
-    path: Assets/TPD's Folder/Scenes/Lobby.unity
+    path: Assets/TPD's Folder/Scenes/LobbyScene.unity
     guid: 88d74f23dd56a6c4e9d9c2d99c32d092
   - enabled: 1
     path: Assets/TPD's Folder/Scenes/MultiplayerScene.unity

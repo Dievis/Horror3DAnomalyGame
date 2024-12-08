@@ -24,6 +24,11 @@ public class ConnectToServer : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Loader.Load(Loader.Scene.Lobby);
+        Loader.Load(Loader.Scene.LobbyScene);
+    }
+
+    public void BackToMainMenu()
+    {
+        Loader.Load(Loader.Scene.MainMenuScene);
     }
 }
