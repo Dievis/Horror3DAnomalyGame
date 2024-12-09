@@ -98,8 +98,10 @@
 //}
 
 
+
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI; // Import UI namespace
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviourPunCallbacks
@@ -119,14 +121,27 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private float groundDistance = 0.4f;
     [SerializeField] private LayerMask groundMask;
 
+    [Header("Stamina Settings")]
+    [SerializeField] private float maxStamina = 100f;
+    [SerializeField] private float staminaDrainRate = 15f;
+    [SerializeField] private float staminaRegenRate = 10f;
+    [SerializeField] private float staminaRegenDelay = 2f;
+
+    [Header("UI Settings")]
+    [SerializeField] private Image staminaBar; // Reference to the UI Image for stamina bar
+
     private CharacterController characterController;
     private Vector3 velocity;
     private bool isGrounded;
     private float xRotation = 0f;
 
+    private float currentStamina;
+    private float staminaRegenTimer;
+
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
+        currentStamina = maxStamina;
 
         if (photonView.IsMine)
         {
@@ -136,6 +151,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             cameraTransform.gameObject.SetActive(false);
         }
+
+        UpdateStaminaUI(); // Initialize UI
     }
 
     private void Update()
@@ -161,7 +178,28 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
 
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift) && currentStamina > 0;
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+
+        // Update stamina
+        if (isRunning)
+        {
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            currentStamina = Mathf.Max(currentStamina, 0);
+            staminaRegenTimer = 0f; // Reset stamina regen timer
+        }
+        else if (currentStamina < maxStamina)
+        {
+            staminaRegenTimer += Time.deltaTime;
+            if (staminaRegenTimer >= staminaRegenDelay)
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                currentStamina = Mathf.Min(currentStamina, maxStamina);
+            }
+        }
+
+        UpdateStaminaUI(); // Update UI every frame
+
         characterController.Move(move * currentSpeed * Time.deltaTime);
 
         if (Input.GetButtonDown("Jump") && isGrounded)
@@ -185,4 +223,14 @@ public class PlayerController : MonoBehaviourPunCallbacks
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
     }
+
+    private void UpdateStaminaUI()
+    {
+        if (staminaBar != null)
+        {
+            staminaBar.fillAmount = currentStamina / maxStamina;
+        }
+    }
 }
+
+
