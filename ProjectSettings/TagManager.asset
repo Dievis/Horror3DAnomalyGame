@@ -9,11 +9,12 @@ TagManager:
   - Hour
   - Breaker
   - Reach
+  - PlayerHUD
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - ground
+  - Ground
   - Water
   - UI
   - Player
