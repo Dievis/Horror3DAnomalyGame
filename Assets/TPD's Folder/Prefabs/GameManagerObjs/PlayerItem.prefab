@@ -13,12 +13,12 @@ GameObject:
   - component: {fileID: 5853715009925595802}
   - component: {fileID: 2303145124293017784}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: KickBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4993335440162067881
 RectTransform:
   m_ObjectHideFlags: 0
@@ -282,8 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee0edab0c115884cb6e6d61ea3b5973, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: {fileID: 6862237447685151300}
-  kickButton: {fileID: 0}
+  playerNameText: {fileID: 6862237447685151300}
 --- !u!1 &7343701415625770321
 GameObject:
   m_ObjectHideFlags: 0

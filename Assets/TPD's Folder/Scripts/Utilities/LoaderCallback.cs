@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LoaderCallback : MonoBehaviour
 {
@@ -8,21 +6,21 @@ public class LoaderCallback : MonoBehaviour
 
     private void Start()
     {
-        // Gọi LoaderCallback khi bắt đầu
+        // Gọi LoaderCallback chỉ khi vào LoadingScene lần đầu tiên
         if (isFirstUpdate)
         {
             isFirstUpdate = false;
-            Loader.LoaderCallback();
+            Loader.LoaderCallback();  // Đảm bảo load scene tiếp theo
         }
     }
 
     private void Update()
     {
+        // Chỉ gọi một lần khi LoadingScene đã hoàn tất
         if (isFirstUpdate)
         {
             isFirstUpdate = false;
-            Loader.LoaderCallback();
+            Loader.LoaderCallback();  // Đảm bảo load scene tiếp theo
         }
     }
 }
-

@@ -24,12 +24,12 @@ public class TransitionManagerUI : MonoBehaviour
 
     public void Singleplayer()
     {
-        Loader.Load(Loader.Scene.SingleplayerScene);
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
     }
     
     public void Multiplayer()
     {
-        Loader.Load(Loader.Scene.ConnectToServer);
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
     }
 
     public void Exit()

@@ -9,6 +9,7 @@ TagManager:
   - Hour
   - Breaker
   - Reach
+  - PlayerHUD
   layers:
   - Default
   - TransparentFX

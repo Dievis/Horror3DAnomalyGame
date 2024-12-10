@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using Photon.Pun; // Thêm thư viện Photon
 
 public class AudioSettingsManagerUI : MonoBehaviour
 {
@@ -16,16 +17,24 @@ public class AudioSettingsManagerUI : MonoBehaviour
 
     void Awake()
     {
-        // Singleton pattern để script chỉ tồn tại một lần
+        // Chỉ định Singleton đảm bảo chỉ có một instance tồn tại
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Không phá hủy khi load Scene mới
+
+            // Kiểm tra nếu game không ở chế độ multiplayer hoặc đối tượng không phải của player khác
+            if (!PhotonNetwork.InRoom || (PhotonView.Get(this) != null && PhotonView.Get(this).IsMine))
+            {
+                DontDestroyOnLoad(gameObject); // Chỉ giữ lại đối tượng local player
+            }
+            else
+            {
+                Destroy(gameObject); // Xóa đối tượng thừa
+            }
         }
         else
         {
-            Destroy(gameObject); // Xóa các bản sao thừa
-            return;
+            Destroy(gameObject); // Đảm bảo không có bản sao thừa
         }
     }
 
@@ -45,6 +54,16 @@ public class AudioSettingsManagerUI : MonoBehaviour
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        // Kiểm tra chế độ multiplayer
+        if (PhotonNetwork.InRoom)
+        {
+            Debug.Log("Running in multiplayer mode");
+        }
+        else
+        {
+            Debug.Log("Running in singleplayer mode");
+        }
     }
 
     public void SetMasterVolume(float value)
