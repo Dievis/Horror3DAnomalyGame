@@ -83,6 +83,7 @@ using UnityEngine.UI;
 
 public class SwitchingPOVDieTest : MonoBehaviourPunCallbacks
 {
+    [Header("UI Elements")]
     public Camera playerCamera; // Camera của người chơi
     public TMP_Text spectateText; // UI Text để hiển thị thông báo
     private bool isDead = false;
