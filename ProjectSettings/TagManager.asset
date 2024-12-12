@@ -11,6 +11,12 @@ TagManager:
   - Reach
   - PlayerHUD
   - HostLeftPanel
+  - InteractableObject
+  - PickupItem
+  - HMObjects
+  - Bullet
+  - Anomaly
+  - 'Anomaly '
   layers:
   - Default
   - TransparentFX
@@ -23,7 +29,7 @@ TagManager:
   - done
   - design
   - error
-  - 
+  - Interactable
   - 
   - 
   - 
