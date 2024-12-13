@@ -78,7 +78,7 @@ public class PauseMenuUI : MonoBehaviourPunCallbacks
         pauseMenuUI.SetActive(true);
         settingsPanelUI.SetActive(false);
         if (playerHUD != null) playerHUD.SetActive(false);
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
         UnlockCursor();
         isPaused = true;
     }

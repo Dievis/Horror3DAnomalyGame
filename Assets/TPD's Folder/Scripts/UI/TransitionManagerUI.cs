@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class TransitionManagerUI : MonoBehaviour
 {
     public CinemachineVirtualCamera currentCamera;
+    public GameObject loadingPanel; // Panel kết nối
+
 
     public void Start()
     {
@@ -25,8 +27,9 @@ public class TransitionManagerUI : MonoBehaviour
 
     public void Singleplayer()
     {
-        // Chuyển đến LoadingScene trước khi vào SingleplayerScene
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
+        // Hiển thị panel loading khi bắt đầu chơi
+        loadingPanel.SetActive(true);
+        SceneManager.LoadScene("SingleplayerScene");
     }
 
     public void Multiplayer()

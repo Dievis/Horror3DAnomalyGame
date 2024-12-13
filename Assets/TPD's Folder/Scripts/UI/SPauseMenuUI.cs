@@ -1,9 +1,7 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SPauseMenuUI : MonoBehaviourPunCallbacks // Kế thừa MonoBehaviourPunCallbacks để xử lý các callback Photon
+public class SPauseMenuUI : MonoBehaviour
 {
     public GameObject pauseMenuUI;
     public GameObject settingsPanelUI;
@@ -70,17 +68,13 @@ public class SPauseMenuUI : MonoBehaviourPunCallbacks // Kế thừa MonoBehavio
 
     public void OnClickBackToMenu()
     {
-        if (PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.Disconnect(); // Ngắt kết nối Photon trước khi chuyển sang menu chính
-        }
-        Debug.Log("Đã ngắt kết nối photon thành công");
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
+        Debug.Log("Đã quay lại menu chính.");
+        LoadMainMenuScene();
     }
 
     private void LoadMainMenuScene()
     {
-        SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MainMenuScene"); // Đảm bảo bạn có scene "MainMenuScene" trong dự án
     }
 
     private void FindPlayerHUD()
@@ -88,7 +82,7 @@ public class SPauseMenuUI : MonoBehaviourPunCallbacks // Kế thừa MonoBehavio
         playerHUD = GameObject.FindGameObjectWithTag("PlayerHUD");
         if (playerHUD == null)
         {
-            Debug.LogWarning("Player HUD không tìm thấy! Hãy đảm bảo là HUD của player đã có tag và player đã spawn.");
+            Debug.LogWarning("Player HUD không tìm thấy! Hãy đảm bảo HUD của player đã có tag và player đã spawn.");
         }
         else
         {
@@ -106,24 +100,5 @@ public class SPauseMenuUI : MonoBehaviourPunCallbacks // Kế thừa MonoBehavio
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-    }
-
-    // Ghi đè OnConnectedToMaster để kiểm tra kết nối lại
-    public override void OnConnectedToMaster()
-    {
-        Debug.Log("Đã kết nối lại với Photon master server.");
-        PhotonNetwork.JoinLobby(); // Vào lại lobby sau khi kết nối thành công
-    }
-
-    public override void OnJoinedLobby()
-    {
-        Debug.Log("Đã vào lobby thành công.");
-    }
-
-    // Phương thức xử lý khi kết nối lại thất bại
-    public override void OnDisconnected(DisconnectCause cause)
-    {
-        Debug.LogWarning("Đã bị ngắt kết nối: " + cause.ToString());
-        // Có thể yêu cầu người chơi quay lại menu chính hoặc thử lại
     }
 }

@@ -201,7 +201,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         loadingPanel.SetActive(true);
 
         // Chuyển tới scene của trò chơi (Photon sẽ xử lý việc tải scene)
-        PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("MultiplayerScene");
     }
 
     public void OnClickBackToMenu()

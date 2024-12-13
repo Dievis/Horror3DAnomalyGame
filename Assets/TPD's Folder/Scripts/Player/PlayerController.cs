@@ -1,12 +1,13 @@
-using Photon.Pun;
+﻿using Photon.Pun;
 using DACNNEWMAP.Manager;
-using System;
 using UnityEngine;
+using UnityEngine.UI; // Thêm UI namespace
 
 namespace DACNNEWMAP.PlayerControl
 {
     public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
+        [Header("Movement Settings")]
         [SerializeField] private float AnimBlendSpeed = 8.9f;
         [SerializeField] private Transform CameraRoot;
         [SerializeField] private Transform Camera;
@@ -17,6 +18,15 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float Dis2Ground = 0.8f;
         [SerializeField] private LayerMask GroundCheck;
         [SerializeField] private float AirResistance = 0.8f;
+
+        [Header("Stamina Settings")]
+        [SerializeField] private float maxStamina = 100f;
+        [SerializeField] private float staminaDrainRate = 15f;
+        [SerializeField] private float staminaRegenRate = 10f;
+        [SerializeField] private float staminaRegenDelay = 2f;
+        [SerializeField] private Image staminaBar; // UI Image cho stamina
+        [SerializeField] private GameObject playerHUD; // UI HUD của player
+
         private Rigidbody _playerRigidbody;
         private InputManager _inputManager;
         private Animator _animator;
@@ -34,6 +44,9 @@ namespace DACNNEWMAP.PlayerControl
         private const float _walkSpeed = 2f;
         private const float _runSpeed = 6f;
         private Vector2 _currentVelocity;
+
+        private float currentStamina;
+        private float staminaRegenTimer;
 
         private void Start()
         {
@@ -56,6 +69,22 @@ namespace DACNNEWMAP.PlayerControl
             _groundHash = Animator.StringToHash("Grounded");
             _fallingHash = Animator.StringToHash("Falling");
             _crouchHash = Animator.StringToHash("Crouch");
+
+            currentStamina = maxStamina;
+
+            // Chỉ hiển thị HUD cho player này
+            if (photonView.IsMine)
+            {
+                playerHUD.SetActive(true);
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                playerHUD.SetActive(false);
+                Camera.gameObject.SetActive(false); // Tắt camera của player khác
+            }
+
+            UpdateStaminaUI();
         }
 
         private void FixedUpdate()
@@ -81,7 +110,6 @@ namespace DACNNEWMAP.PlayerControl
             CamMovements();
         }
 
-
         private void Move()
         {
             if (!_hasAnimator) return;
@@ -92,6 +120,33 @@ namespace DACNNEWMAP.PlayerControl
 
             if (_grounded)
             {
+                // Xử lý giảm stamina khi chạy
+                if (_inputManager.Run && currentStamina > 0)
+                {
+                    currentStamina -= staminaDrainRate * Time.deltaTime;
+                    currentStamina = Mathf.Max(currentStamina, 0);
+                    staminaRegenTimer = 0f; // Reset timer regen stamina
+                }
+
+                // Xử lý hồi phục stamina khi không chạy
+                if (!_inputManager.Run && currentStamina < maxStamina)
+                {
+                    staminaRegenTimer += Time.deltaTime;
+                    if (staminaRegenTimer >= staminaRegenDelay)
+                    {
+                        currentStamina += staminaRegenRate * Time.deltaTime;
+                        currentStamina = Mathf.Min(currentStamina, maxStamina);
+                    }
+                }
+
+                // Khi hết stamina, không thể chạy nữa
+                if (currentStamina <= 0)
+                {
+                    targetSpeed = _walkSpeed;  // Giới hạn tốc độ di chuyển
+                }
+
+                UpdateStaminaUI(); // Cập nhật UI stamina
+
                 _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _inputManager.Move.x * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
                 _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _inputManager.Move.y * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
 
@@ -163,17 +218,44 @@ namespace DACNNEWMAP.PlayerControl
             _animator.SetBool(_groundHash, _grounded);
         }
 
+        private void UpdateStaminaUI()
+        {
+            if (staminaBar != null)
+            {
+                staminaBar.fillAmount = currentStamina / maxStamina;
+            }
+        }
+
+        // Photon RPC để đồng bộ stamina với các máy khách khác
+        [PunRPC]
+        private void UpdateStamina(float newStamina)
+        {
+            currentStamina = newStamina;
+            UpdateStaminaUI();
+        }
+
+        private void SyncStamina()
+        {
+            if (PhotonNetwork.IsConnected && photonView.IsMine)
+            {
+                photonView.RPC("UpdateStamina", RpcTarget.Others, currentStamina); // Đồng bộ stamina cho các máy khách khác
+            }
+        }
+
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
             {
+                stream.SendNext(currentStamina);
                 stream.SendNext(_grounded);
                 stream.SendNext(_currentVelocity);
             }
             else
             {
+                currentStamina = (float)stream.ReceiveNext();
                 _grounded = (bool)stream.ReceiveNext();
                 _currentVelocity = (Vector2)stream.ReceiveNext();
+                UpdateStaminaUI();
             }
         }
     }
