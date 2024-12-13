@@ -1270,6 +1270,11 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 0
+  maxStamina: 100
+  staminaDrainRate: 15
+  staminaRegenRate: 10
+  staminaRegenDelay: 2
+  staminaBar: {fileID: 0}
 --- !u!143 &8473314995241434748
 CharacterController:
   m_ObjectHideFlags: 0

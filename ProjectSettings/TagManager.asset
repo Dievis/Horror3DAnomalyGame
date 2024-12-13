@@ -9,11 +9,19 @@ TagManager:
   - Hour
   - Breaker
   - Reach
+  - PlayerHUD
+  - HostLeftPanel
+  - InteractableObject
+  - PickupItem
+  - HMObjects
+  - Bullet
+  - Anomaly
+  - 'Anomaly '
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - ground
+  - Ground
   - Water
   - UI
   - Player
@@ -21,7 +29,7 @@ TagManager:
   - done
   - design
   - error
-  - 
+  - Interactable
   - 
   - 
   - 

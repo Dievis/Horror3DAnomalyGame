@@ -6,19 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/TPD's Folder/Scenes/MainMenuScene 1.unity
+    path: Assets/TPD's Folder/Scenes/MainMenuScene.unity
     guid: 42ab47cb0f3bc694ca1b233e17850955
   - enabled: 1
-    path: Assets/TPD's Folder/Scenes/MainMenuScene.unity
-    guid: 168d2d5ea693e434893f9229c8943d9c
-  - enabled: 1
     path: Assets/TPD's Folder/Scenes/SingleplayerScene.unity
-    guid: af3afe4b9871675408ac0559a794f0b2
+    guid: 201351d4772ab434fa2b6be472513f90
   - enabled: 1
-    path: Assets/TPD's Folder/Scenes/ConnectToServer.unity
-    guid: 70655ffd948efac4b9e4b43dd76049ae
-  - enabled: 1
-    path: Assets/TPD's Folder/Scenes/Lobby.unity
+    path: Assets/TPD's Folder/Scenes/LobbyScene.unity
     guid: 88d74f23dd56a6c4e9d9c2d99c32d092
   - enabled: 1
     path: Assets/TPD's Folder/Scenes/MultiplayerScene.unity
@@ -26,4 +20,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TPD's Folder/Scenes/LoadingScene.unity
     guid: c5600275c3bedd24897636e465189a1b
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/TPD's Folder/Scenes/PhotonTestingScene/Game.unity
+    guid: 3bce744680d21ed47ad67329ef53019b
+  - enabled: 0
+    path: Assets/TPD's Folder/Scenes/test/test.unity
+    guid: 10cdf6c51c8909b41a46ca69a7f17c8b
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 90efd6e1b27708e49a5ef573b109675e, type: 3}
