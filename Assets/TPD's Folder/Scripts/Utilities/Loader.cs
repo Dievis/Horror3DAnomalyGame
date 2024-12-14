@@ -70,8 +70,10 @@ public static class Loader
         MainMenuScene,
         SingleplayerScene,
         LoadingScene,
+        ConnectToServerScene,
         LobbyScene,
-        Game
+        Game,
+        test
     }
 
     private static Scene targetScene;
@@ -107,3 +109,6 @@ public static class Loader
         }
     }
 }
+
+
+

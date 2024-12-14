@@ -1,50 +1,52 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
+
+
 using Photon.Pun;
+using Photon.Realtime;
+using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuUI : MonoBehaviourPunCallbacks
 {
-    public GameObject pauseMenuUI;     // Gán UI menu tạm dừng từ Editor
-    public GameObject settingsPanelUI; // Gán UI panel cài đặt từ Editor
-    private GameObject playerHUD;      // Tự động tìm HUD khi player spawn
+    public GameObject pauseMenuUI;
+    public GameObject settingsPanelUI;
+    private GameObject playerHUD;
     private bool isPaused = false;
+    private bool isLeavingRoom = false;
 
     void Start()
     {
         if (!photonView.IsMine)
         {
-            // Nếu không phải player local, tắt PauseMenu để tránh xung đột
             pauseMenuUI.SetActive(false);
             settingsPanelUI.SetActive(false);
             return;
         }
 
-        pauseMenuUI.SetActive(false);    // Ẩn menu tạm dừng ban đầu
-        settingsPanelUI.SetActive(false); // Ẩn settings panel ban đầu
-        //UnlockCursor();                  // Mở khóa con trỏ khi khởi động game
-        FindPlayerHUD();                 // Tự động tìm HUD
+        pauseMenuUI.SetActive(false);
+        settingsPanelUI.SetActive(false);
+        FindPlayerHUD();
 
         if (PhotonNetwork.InRoom)
         {
-            Debug.Log("Running in multiplayer mode");
+            Debug.Log("Đang chạy trên chế độ multiplayer");
         }
         else
         {
-            Debug.Log("Running in singleplayer mode");
+            Debug.Log("Đang chạy trên chế độ singleplayer");
         }
     }
 
     void Update()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine) return;
 
-        // Kiểm tra nếu người chơi nhấn phím Esc
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused && settingsPanelUI.activeSelf)
             {
-                BackToPauseMenu(); // Nếu đang ở setting panel thì quay lại pause menu
+                BackToPauseMenu();
             }
             else if (isPaused)
             {
@@ -57,94 +59,167 @@ public class PauseMenuUI : MonoBehaviourPunCallbacks
         }
     }
 
-    // Hàm tiếp tục game
     public void Resume()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine || isLeavingRoom) return;
 
-        pauseMenuUI.SetActive(false);      // Ẩn menu tạm dừng
-        settingsPanelUI.SetActive(false); // Ẩn panel cài đặt
-        if (playerHUD != null) playerHUD.SetActive(true); // Hiển thị lại HUD của player
-        Time.timeScale = 1f;              // Khôi phục thời gian game
-        LockCursor();                     // Khóa con trỏ chuột
-        isPaused = false;                 // Đặt trạng thái là không tạm dừng
+        pauseMenuUI.SetActive(false);
+        settingsPanelUI.SetActive(false);
+        if (playerHUD != null) playerHUD.SetActive(true);
+        Time.timeScale = 1f;
+        LockCursor();
+        isPaused = false;
     }
 
-    // Hàm tạm dừng game
     public void Pause()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine || isLeavingRoom) return;
 
-        pauseMenuUI.SetActive(true);      // Hiển thị menu tạm dừng
-        settingsPanelUI.SetActive(false); // Ẩn panel cài đặt
-        if (playerHUD != null) playerHUD.SetActive(false); // Ẩn HUD của player
-        Time.timeScale = 0f;              // Dừng thời gian game
-        UnlockCursor();                   // Mở khóa con trỏ chuột
-        isPaused = true;                  // Đặt trạng thái là tạm dừng
+        pauseMenuUI.SetActive(true);
+        settingsPanelUI.SetActive(false);
+        if (playerHUD != null) playerHUD.SetActive(false);
+        Time.timeScale = 0f;
+        UnlockCursor();
+        isPaused = true;
     }
 
     public void OpenSettings()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine || isLeavingRoom) return;
 
-        Debug.Log("Opening settings panel"); // Thông báo kiểm tra
-        pauseMenuUI.SetActive(false);        // Ẩn menu tạm dừng
-        settingsPanelUI.SetActive(true);     // Hiển thị panel cài đặt
+        pauseMenuUI.SetActive(false);
+        settingsPanelUI.SetActive(true);
     }
 
     public void BackToPauseMenu()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine) return;
 
-        Debug.Log("Returning to pause menu"); // Thông báo kiểm tra
-        settingsPanelUI.SetActive(false);     // Ẩn panel cài đặt
-        pauseMenuUI.SetActive(true);          // Hiển thị menu tạm dừng
+        settingsPanelUI.SetActive(false);
+        pauseMenuUI.SetActive(true);
     }
 
-    // Hàm về main menu (gán vào nút trong UI)
-    public void BackToMainMenu()
+    public void OnClickBackToMenu()
     {
-        if (!photonView.IsMine) return; // Chỉ xử lý cho local player
+        if (!photonView.IsMine || isLeavingRoom) return;
 
-        // Kiểm tra nếu đang ở trong phòng
         if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.LeaveRoom(); // Rời phòng multiplayer
+            if (PhotonNetwork.IsConnectedAndReady)
+            {
+                Debug.Log("Leaving room...");
+                isLeavingRoom = true;
+                SetMenuButtonsInteractable(false);
+                SetRoomPropertiesBeforeLeaving(); // Gọi SetProperties trước khi rời phòng
+                LeaveRoom(); // Rời khỏi phòng ngay lập tức
+                StartCoroutine(WaitForLeftRoom());
+            }
+            else
+            {
+                Debug.LogWarning("Photon client chưa sẵn sàng để rời phòng.");
+            }
         }
-
-        // Chuyển về main menu
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
+        else
+        {
+            Debug.Log("Đang chuyển trực tiếp đến Main Menu...");
+            LoadMainMenuScene();
+        }
     }
 
+    private void SetRoomPropertiesBeforeLeaving()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            // Thực hiện thay đổi các thuộc tính phòng (SetProperties) trước khi rời phòng
+            ExitGames.Client.Photon.Hashtable properties = new ExitGames.Client.Photon.Hashtable();
+            properties.Add("GamePaused", true); // Ví dụ thêm một thuộc tính "GamePaused"
+            PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
+            Debug.Log("Đã cập nhật thuộc tính phòng trước khi rời phòng.");
+        }
+    }
 
-    // Hàm tự động tìm HUD trong player prefab
+    private void LeaveRoom()
+    {
+        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.LeaveRoom();
+    }
+
+    private IEnumerator WaitForLeftRoom()
+    {
+        float timeout = 5f; // Thời gian chờ tối đa
+        float elapsed = 0f;
+
+        while (PhotonNetwork.InRoom && elapsed < timeout)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!PhotonNetwork.InRoom)
+        {
+            Debug.Log("Successfully left room.");
+            LoadMainMenuScene(); // Sau khi đã rời phòng, mới chuyển cảnh
+        }
+        else
+        {
+            Debug.LogWarning("Timeout while waiting to leave room.");
+            LoadMainMenuScene(); // Nếu bị timeout, chuyển cảnh về MainMenu
+        }
+    }
+
+    private void LoadMainMenuScene()
+    {
+        // Đảm bảo client không còn kết nối với Photon khi chuyển cảnh
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect();
+        }
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.LogWarning($"Đã bị ngắt kết nối: {cause}. Chuyển về Main Menu.");
+        LoadMainMenuScene(); // Dự phòng trong trường hợp bị ngắt kết nối
+    }
+
+    public void SetMenuButtonsInteractable(bool isInteractable)
+    {
+        foreach (var button in pauseMenuUI.GetComponentsInChildren<UnityEngine.UI.Button>())
+        {
+            button.interactable = isInteractable;
+        }
+
+        foreach (var button in settingsPanelUI.GetComponentsInChildren<UnityEngine.UI.Button>())
+        {
+            button.interactable = isInteractable;
+        }
+    }
+
     private void FindPlayerHUD()
     {
         if (!photonView.IsMine) return;
 
-        // Tìm HUD bằng tag hoặc component (đảm bảo HUD có tag "PlayerHUD" trong prefab)
         playerHUD = GameObject.FindGameObjectWithTag("PlayerHUD");
         if (playerHUD == null)
         {
-            Debug.LogWarning("Player HUD not found! Make sure it has the correct tag or is spawned.");
+            Debug.LogWarning("Player HUD không tìm thấy! Hãy đảm bảo là HUD của player đã có tag và player đã spawn.");
         }
         else
         {
-            Debug.Log("Player HUD found and assigned.");
+            Debug.Log("Player HUD đã tìm thấy và gắn thành công.");
         }
     }
 
-    // Hàm khóa con trỏ chuột
     private void LockCursor()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Khóa con trỏ vào giữa màn hình
-        Cursor.visible = false;                  // Ẩn con trỏ
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    // Hàm mở khóa con trỏ chuột
     private void UnlockCursor()
     {
-        Cursor.lockState = CursorLockMode.None;  // Mở khóa con trỏ
-        Cursor.visible = true;                   // Hiển thị con trỏ
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

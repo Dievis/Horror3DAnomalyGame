@@ -1,7 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TransitionManagerUI : MonoBehaviour
 {
@@ -24,12 +25,17 @@ public class TransitionManagerUI : MonoBehaviour
 
     public void Singleplayer()
     {
+        // Chuyển đến LoadingScene trước khi vào SingleplayerScene
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
     }
-    
+
     public void Multiplayer()
     {
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
+        // Chuyển đến LoadingScene trước khi vào LobbyScene
+        //Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
+
+        //Chuyển thẳng đến lobbyScene
+        SceneManager.LoadScene("LobbyScene");
     }
 
     public void Exit()

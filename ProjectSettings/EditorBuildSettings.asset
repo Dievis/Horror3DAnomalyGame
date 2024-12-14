@@ -23,4 +23,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/TPD's Folder/Scenes/PhotonTestingScene/Game.unity
     guid: 3bce744680d21ed47ad67329ef53019b
-  m_configObjects: {}
+  - enabled: 0
+    path: Assets/TPD's Folder/Scenes/test/test.unity
+    guid: 10cdf6c51c8909b41a46ca69a7f17c8b
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 90efd6e1b27708e49a5ef573b109675e, type: 3}

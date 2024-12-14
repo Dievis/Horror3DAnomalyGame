@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class ChangeInputFieldColor : MonoBehaviour
 {
+    [Header("UI Elements")]
     public TMP_InputField inputField;  // Kéo InputField vào đây từ Inspector
 
     void Start()

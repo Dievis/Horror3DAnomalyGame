@@ -1,116 +1,135 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 using Photon.Pun;
-using Photon.Realtime;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviourPunCallbacks
 {
     public NavMeshAgent ai;
     public List<Transform> destinations;
     public Animator aiAnim;
-    public float walkSpeed, chaseSpeed, minIdleTime, maxIdleTime, idleTime, detectionDistance, catchDistance, searchDistance, minChaseTime, maxChaseTime, minSearchTime, maxSearchTime, jumpscareTime;
+    public float walkSpeed, chaseSpeed, minIdleTime, maxIdleTime, detectionDistance, catchDistance, searchDistance, minChaseTime, maxChaseTime, minSearchTime, maxSearchTime, jumpscareTime;
+    public float idleTime = 0f; // Đảm bảo giá trị khởi tạo
     public bool walking, chasing, searching;
     public Transform player;
     Transform currentDest;
     Vector3 dest;
     public Vector3 rayCastOffset;
-    public string deathScene;
-    public float aiDistance;
     public GameObject hideText, stopHideText;
+    public GameObject deathPanel;
+
+    private PhotonView photonView;
 
     void Start()
     {
-        walking = true;
-        currentDest = destinations[Random.Range(0, destinations.Count)];
+        photonView = GetComponent<PhotonView>();
+
+        // Chỉ Master Client điều khiển quái vật
+        if (PhotonNetwork.IsMasterClient)
+        {
+            deathPanel.SetActive(false);
+            walking = true;
+            currentDest = destinations[Random.Range(0, destinations.Count)];
+        }
     }
+
     void Update()
     {
+        // Chỉ Master Client mới cập nhật trạng thái quái vật
+        if (!PhotonNetwork.IsMasterClient) return;
+
         Vector3 direction = (player.position - transform.position).normalized;
         RaycastHit hit;
-        aiDistance = Vector3.Distance(player.position, this.transform.position);
+        float aiDistance = Vector3.Distance(player.position, this.transform.position);
+
         if (Physics.Raycast(transform.position + rayCastOffset, direction, out hit, detectionDistance))
         {
             if (hit.collider.gameObject.tag == "Player")
             {
                 walking = false;
-                StopCoroutine("stayIdle");
-                StopCoroutine("searchRoutine");
+                StopAllCoroutines();
                 StartCoroutine("searchRoutine");
                 searching = true;
             }
         }
-        if (searching == true)
+
+        if (searching)
         {
             ai.speed = 0;
-            aiAnim.ResetTrigger("walk");
-            aiAnim.ResetTrigger("idle");
-            aiAnim.ResetTrigger("sprint");
-            aiAnim.SetTrigger("search");
+            SyncAnimation("search");
             if (aiDistance <= searchDistance)
             {
-                StopCoroutine("stayIdle");
-                StopCoroutine("searchRoutine");
-                StopCoroutine("chaseRoutine");
+                StopAllCoroutines();
                 StartCoroutine("chaseRoutine");
                 chasing = true;
                 searching = false;
             }
         }
-        if (chasing == true)
+
+        if (chasing)
         {
             dest = player.position;
             ai.destination = dest;
             ai.speed = chaseSpeed;
-            aiAnim.ResetTrigger("walk");
-            aiAnim.ResetTrigger("idle");
-            aiAnim.ResetTrigger("search");
-            aiAnim.SetTrigger("sprint");
+            SyncAnimation("sprint");
+
             if (aiDistance <= catchDistance)
             {
-                player.gameObject.SetActive(false);
-                aiAnim.ResetTrigger("walk");
-                aiAnim.ResetTrigger("idle");
-                aiAnim.ResetTrigger("search");
-                hideText.SetActive(false);
-                stopHideText.SetActive(false);
-                aiAnim.ResetTrigger("sprint");
-                aiAnim.SetTrigger("jumpscare");
-                StartCoroutine(deathRoutine());
+                photonView.RPC("PlayerCaught", RpcTarget.All);
                 chasing = false;
             }
         }
-        if (walking == true)
+
+        if (walking)
         {
             dest = currentDest.position;
             ai.destination = dest;
             ai.speed = walkSpeed;
-            aiAnim.ResetTrigger("sprint");
-            aiAnim.ResetTrigger("idle");
-            aiAnim.ResetTrigger("search");
-            aiAnim.SetTrigger("walk");
+            SyncAnimation("walk");
+
             if (ai.remainingDistance <= ai.stoppingDistance)
             {
-                aiAnim.ResetTrigger("sprint");
-                aiAnim.ResetTrigger("walk");
-                aiAnim.ResetTrigger("search");
-                aiAnim.SetTrigger("idle");
+                SyncAnimation("idle");
                 ai.speed = 0;
-                StopCoroutine("stayIdle");
+                StopAllCoroutines();
                 StartCoroutine("stayIdle");
                 walking = false;
             }
         }
     }
+
+    [PunRPC]
+    void PlayerCaught()
+    {
+        deathPanel.SetActive(true); // Hiển thị deathPanel
+        player.gameObject.SetActive(false); // Tắt player
+        SyncAnimation("jumpscare");
+
+        if (PhotonNetwork.IsMasterClient)
+            StartCoroutine(deathRoutine());
+    }
+
+    void SyncAnimation(string trigger)
+    {
+        aiAnim.ResetTrigger("walk");
+        aiAnim.ResetTrigger("idle");
+        aiAnim.ResetTrigger("search");
+        aiAnim.ResetTrigger("sprint");
+        aiAnim.ResetTrigger("jumpscare");
+        aiAnim.SetTrigger(trigger);
+    }
+
     public void stopChase()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
+
         walking = true;
         chasing = false;
-        StopCoroutine("chaseRoutine");
+        StopAllCoroutines();
         currentDest = destinations[Random.Range(0, destinations.Count)];
     }
+
     IEnumerator stayIdle()
     {
         idleTime = Random.Range(minIdleTime, maxIdleTime);
@@ -118,6 +137,7 @@ public class EnemyAI : MonoBehaviour
         walking = true;
         currentDest = destinations[Random.Range(0, destinations.Count)];
     }
+
     IEnumerator searchRoutine()
     {
         yield return new WaitForSeconds(Random.Range(minSearchTime, maxSearchTime));
@@ -125,14 +145,16 @@ public class EnemyAI : MonoBehaviour
         walking = true;
         currentDest = destinations[Random.Range(0, destinations.Count)];
     }
+
     IEnumerator chaseRoutine()
     {
         yield return new WaitForSeconds(Random.Range(minChaseTime, maxChaseTime));
         stopChase();
     }
+
     IEnumerator deathRoutine()
     {
         yield return new WaitForSeconds(jumpscareTime);
-        SceneManager.LoadScene(deathScene);
+        PhotonNetwork.LoadLevel("MainMenuScene"); // Chuyển cảnh khi chết
     }
 }

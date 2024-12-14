@@ -48,6 +48,17 @@ MonoBehaviour:
   - ToggleLight
   - TogglePowerSource
   - SwitchToSpectatorMode
+  - PlayerCaught
+  - UpdateStamina
+  - AttachItemToHand
+  - DropItemRPC
+  - PickupItem
+  - SpawnDroppedItem
+  - ActivateGlitchEffect
+  - DestroyAnomaly
+  - ResetAnomaly
+  - SwitchAnomalyState
+  - TransferOwnershipToAllClients
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -58,11 +58,11 @@ public class AudioSettingsManagerUI : MonoBehaviour
         // Kiểm tra chế độ multiplayer
         if (PhotonNetwork.InRoom)
         {
-            Debug.Log("Running in multiplayer mode");
+            Debug.Log("Đang chay trên chế độ multiplayer từ script audiosetting");
         }
         else
         {
-            Debug.Log("Running in singleplayer mode");
+            Debug.Log("Đang chay trên chế độ singleplayer từ script audiosetting");
         }
     }
 

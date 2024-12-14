@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 183b3fc1cfae0b941b0ea1ea10a3e178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 6994092054939396251, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+  playerPrefab: {fileID: 8904779244029047845, guid: ca6d66d8b97b2d5419f26dec61a2213d, type: 3}
   spawnPoints:
   - {fileID: 4415058282459049287}
   - {fileID: 19862481563251080}
@@ -158,6 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c79e92c9ff786704cb02e4186836c0df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hostLeftPanel: {fileID: 0}
 --- !u!1 &4239648654057997739
 GameObject:
   m_ObjectHideFlags: 0
