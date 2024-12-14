@@ -5,7 +5,7 @@ using UnityEngine.UI; // Thêm UI namespace
 
 namespace DACNNEWMAP.PlayerControl
 {
-    public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
+    public class MultiplayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         [Header("Movement Settings")]
         [SerializeField] private float AnimBlendSpeed = 8.9f;

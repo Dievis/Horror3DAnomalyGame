@@ -39,7 +39,7 @@ public class SPauseMenuUI : MonoBehaviour
         pauseMenuUI.SetActive(false);
         settingsPanelUI.SetActive(false);
         if (playerHUD != null) playerHUD.SetActive(true);
-        Time.timeScale = 1f;
+        Time.timeScale = 1f;  // Ensure the game resumes correctly
         LockCursor();
         isPaused = false;
     }
@@ -49,7 +49,7 @@ public class SPauseMenuUI : MonoBehaviour
         pauseMenuUI.SetActive(true);
         settingsPanelUI.SetActive(false);
         if (playerHUD != null) playerHUD.SetActive(false);
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;  // Pause the game when the menu is active
         UnlockCursor();
         isPaused = true;
     }
@@ -69,6 +69,8 @@ public class SPauseMenuUI : MonoBehaviour
     public void OnClickBackToMenu()
     {
         Debug.Log("Đã quay lại menu chính.");
+        Time.timeScale = 1f;  // Ensure time scale is reset when returning to the main menu
+        UnlockCursor();  // Make sure cursor is unlocked when returning to menu
         LoadMainMenuScene();
     }
 

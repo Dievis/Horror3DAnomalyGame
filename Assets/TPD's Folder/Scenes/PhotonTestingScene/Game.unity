@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733d3e60a87870644ba35c4d809f3c9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseMenuUI: {fileID: 69914897}
+  escMenuUI: {fileID: 69914897}
   settingsPanelUI: {fileID: 69914896}
 --- !u!1 &123712339
 GameObject:
