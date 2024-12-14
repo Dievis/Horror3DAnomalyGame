@@ -1,25 +1,29 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using TMPro;
+using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
-using TMPro;
 
 public class PlayerItemUI : MonoBehaviour
 {
     public TMP_Text playerName;
+
     private Player player;
 
     public void SetPlayerInfo(Player _player)
     {
+        if (_player == null)
+        {
+            Debug.LogError("Player passed to SetPlayerInfo is null.");
+            return;
+        }
+
         player = _player;
-        playerName.text = _player.NickName;
 
-        // Chỉ hiển thị nút Kick nếu người chơi hiện tại là MasterClient và người này không phải chính họ
-    }
+        if (playerName != null)
+        {
+            playerName.text = player.NickName;
+        }
 
-    public void OnClickKickButton()
-    {
-        // Gọi hàm KickPlayer từ LobbyManager
-        FindObjectOfType<LobbyManager>().KickPlayer(player);
+        // Remove any ready state functionality, no longer needed
     }
 }

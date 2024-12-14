@@ -1,7 +1,4 @@
-﻿
-
-
-using Photon.Pun;
+﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using System.Collections;
@@ -42,6 +39,7 @@ public class PauseMenuUI : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine) return;
 
+        // Nếu phím Esc được nhấn và menu chưa bị khóa, xử lý Pause/Resume
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused && settingsPanelUI.activeSelf)
@@ -63,24 +61,31 @@ public class PauseMenuUI : MonoBehaviourPunCallbacks
     {
         if (!photonView.IsMine || isLeavingRoom) return;
 
-        pauseMenuUI.SetActive(false);
-        settingsPanelUI.SetActive(false);
-        if (playerHUD != null) playerHUD.SetActive(true);
-        Time.timeScale = 1f;
-        LockCursor();
-        isPaused = false;
+        // Người chủ phòng thực hiện thay đổi trạng thái
+        photonView.RPC("TogglePauseMenu", RpcTarget.All, false);  // Thông báo cho tất cả người chơi resume
     }
 
     public void Pause()
     {
         if (!photonView.IsMine || isLeavingRoom) return;
 
-        pauseMenuUI.SetActive(true);
-        settingsPanelUI.SetActive(false);
-        if (playerHUD != null) playerHUD.SetActive(false);
-        Time.timeScale = 0f;
-        UnlockCursor();
-        isPaused = true;
+        // Người chủ phòng thực hiện thay đổi trạng thái
+        photonView.RPC("TogglePauseMenu", RpcTarget.All, true);  // Thông báo cho tất cả người chơi pause
+    }
+
+    [PunRPC]
+    public void TogglePauseMenu(bool pauseStatus)
+    {
+        if (!photonView.IsMine) return;
+
+        isPaused = pauseStatus;
+        pauseMenuUI.SetActive(isPaused);
+        settingsPanelUI.SetActive(false);  // Đảm bảo rằng settings không bị bật cùng lúc với pause menu
+        if (playerHUD != null) playerHUD.SetActive(!isPaused);
+
+        Time.timeScale = isPaused ? 0f : 0f;  // Dừng thời gian khi pause
+        if (isPaused) UnlockCursor();
+        else LockCursor();
     }
 
     public void OpenSettings()

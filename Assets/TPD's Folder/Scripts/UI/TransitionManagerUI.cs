@@ -8,34 +8,43 @@ public class TransitionManagerUI : MonoBehaviour
 {
     public CinemachineVirtualCamera currentCamera;
 
-    public void Start()
+    private void Awake()
     {
-        currentCamera.Priority++;
+        UnlockCursor();
     }
 
+    private void Start()
+    {
+        // Chỉ tăng priority của camera nếu camera không phải là camera hiện tại
+        if (currentCamera != null)
+            currentCamera.Priority++;
+    }
 
     public void UpdateCamera(CinemachineVirtualCamera target)
     {
-        currentCamera.Priority--;
+        // Kiểm tra nếu camera mới khác camera hiện tại để tránh thay đổi không cần thiết
+        if (currentCamera != target)
+        {
+            // Giảm priority của camera cũ
+            if (currentCamera != null)
+                currentCamera.Priority--;
 
-        currentCamera = target;
-
-        currentCamera.Priority++;
+            // Cập nhật camera hiện tại và tăng priority
+            currentCamera = target;
+            currentCamera.Priority++;
+        }
     }
 
     public void Singleplayer()
     {
-        // Chuyển đến LoadingScene trước khi vào SingleplayerScene
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
+        // Gọi phương thức LoadScene chung để tránh mã trùng lặp
+        LoadScene(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
     }
 
     public void Multiplayer()
     {
-        // Chuyển đến LoadingScene trước khi vào LobbyScene
-        //Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
-
-        //Chuyển thẳng đến lobbyScene
-        SceneManager.LoadScene("LobbyScene");
+        // Tương tự như Singleplayer nhưng cho Multiplayer
+        LoadScene(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
     }
 
     public void Exit()
@@ -43,4 +52,16 @@ public class TransitionManagerUI : MonoBehaviour
         Application.Quit();
     }
 
+    private void UnlockCursor()
+    {
+        // Mở khóa con trỏ khi cần thiết
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void LoadScene(Loader.Scene loadingScene, Loader.Scene targetScene)
+    {
+        // Hiển thị màn hình loading và chuyển đến scene mục tiêu
+        Loader.Load(loadingScene, targetScene);
+    }
 }

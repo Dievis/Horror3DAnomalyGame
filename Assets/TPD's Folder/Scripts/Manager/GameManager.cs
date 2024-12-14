@@ -1,35 +1,73 @@
 ﻿using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using System.Collections;
-using Photon.Pun.Demo.PunBasics;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using TMPro;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    private GameObject hostLeftPanel; // Panel hiển thị khi chủ phòng thoát
+    // UI Panels
+    [Header("UI Panels")]
+    [SerializeField] private GameObject hostLeftPanel;
+    [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject losePanel;
+    [SerializeField] private GameObject gameInfoPanel;
+
+    // Game Stats
+    [Header("Game Stats")]
+    [SerializeField] private int totalAnomalies;
+    [SerializeField] private int anomaliesFound = 0;
+    [SerializeField] private float gameDuration = 60f; 
+    [SerializeField] private float timer;
+    [SerializeField] private bool gameEnded = false;
+
+    // UI Elements to display the anomaly count and time remaining
+    [Header("UI Elements - Game Info")]
+    [SerializeField] private TMP_Text anomalyCountText;  // Text UI to display anomaly count
+    [SerializeField] private TMP_Text timerText;         // Text UI to display remaining time
+
+    private void Start()
+    {
+        timer = gameDuration;
+        totalAnomalies = GameObject.FindGameObjectsWithTag("Anomaly").Length;
+
+        // Initialize the UI with the current anomaly count and time
+        UpdateAnomalyCountUI();
+        UpdateTimerUI();
+
+        // Ensure game info panel is hidden at the start
+        gameInfoPanel.SetActive(false);
+    }
+
+    private void UpdateAnomalyCountUI()
+    {
+        if (anomalyCountText != null)
+        {
+            anomalyCountText.text = $"Anomaly: {anomaliesFound}/{totalAnomalies}";
+        }
+    }
+
+    private void UpdateTimerUI()
+    {
+        if (timerText != null)
+        {
+            timerText.text = $"Thời gian: {Mathf.CeilToInt(timer)}s"; // Hiển thị thời gian còn lại
+        }
+    }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         Debug.Log($"{otherPlayer.NickName} đã rời game.");
         RemovePlayerObjects(otherPlayer);
-
-        // Kiểm tra nếu người chơi rời là chủ phòng
-        if (PhotonNetwork.IsMasterClient == false && otherPlayer.IsMasterClient)
-        {
-            Debug.Log("Chủ phòng đã thoát. Quay lại menu.");
-
-            if (PhotonNetwork.IsConnectedAndReady)
-            {
-                ShowHostLeftPanel();
-            }
-            else
-            {
-                Debug.LogWarning("Photon client chưa sẵn sàng để xử lý việc chủ phòng rời đi.");
-            }
-        }
     }
 
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Debug.Log("Master Client đã rời đi. Đuổi tất cả người chơi ra khỏi phòng.");
+        PhotonNetwork.LeaveRoom();
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
+    }
 
     private void RemovePlayerObjects(Player player)
     {
@@ -38,20 +76,20 @@ public class GameManager : MonoBehaviourPunCallbacks
             PhotonView view = obj.GetComponent<PhotonView>();
             if (view != null && view.Owner == player)
             {
-                PhotonNetwork.Destroy(obj); // Xóa object của người chơi đã thoát
+                PhotonNetwork.Destroy(obj);
             }
         }
     }
 
     private void ShowHostLeftPanel()
     {
-        if (hostLeftPanel != null) hostLeftPanel.SetActive(true); // Hiển thị thông báo
+        if (hostLeftPanel != null) hostLeftPanel.SetActive(true);
         StartCoroutine(ReturnToMenuAfterDelay());
     }
 
     private IEnumerator ReturnToMenuAfterDelay()
     {
-        yield return new WaitForSeconds(3); // Đợi 3 giây trước khi quay lại menu
+        yield return new WaitForSeconds(3);
 
         if (PhotonNetwork.IsConnectedAndReady)
         {
@@ -64,25 +102,87 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Xử lý khi client rời phòng (tự rời hoặc mất kết nối)
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.Log("Mất kết nối khỏi Photon.");
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
     }
 
-    private void FindHostLeftPanel()
+    private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (gameEnded) return;
 
-        hostLeftPanel = GameObject.FindGameObjectWithTag("HostLeftPanel");
-        if (hostLeftPanel == null)
+        timer -= Time.deltaTime;
+
+        // Update the timer text in UI
+        UpdateTimerUI();
+
+        if (timer <= 0f)
         {
-            Debug.LogWarning("Giao diện không tìm thấy!");
+            EndGame(false); // Thua do hết thời gian
+        }
+
+        if (anomaliesFound >= totalAnomalies)
+        {
+            EndGame(true); // Thắng do tìm đủ anomaly
+        }
+
+        // Check for Tab key press to toggle the game info panel visibility
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleGameInfoPanel();
+        }
+    }
+
+    private void ToggleGameInfoPanel()
+    {
+        // Toggle visibility of the game info panel
+        gameInfoPanel.SetActive(!gameInfoPanel.activeSelf);
+    }
+
+    private void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    [PunRPC]
+    public void OnAnomalyFound()
+    {
+        anomaliesFound++;
+        UpdateAnomalyCountUI();  // Cập nhật UI mỗi khi tìm thấy anomaly
+    }
+
+    private void EndGame(bool victory)
+    {
+        gameEnded = true;
+
+        UnlockCursor();
+
+        if (victory)
+        {
+            winPanel.gameObject.SetActive(true);
+            Debug.Log("Người chơi đã chiến thắng!");
+            // Hiển thị UI chiến thắng
         }
         else
         {
-            Debug.Log("Giao diện đã tìm thấy và gắn thành công.");
+            Debug.Log("Người chơi đã thua cuộc!");
+            losePanel.gameObject.SetActive(true);
+            // Hiển thị UI thất bại
         }
+
+        StartCoroutine(ReturnToMenuAfterDelay());
+    }
+
+    public void NotifyAnomalyFound()
+    {
+        photonView.RPC("OnAnomalyFound", RpcTarget.All);
     }
 }

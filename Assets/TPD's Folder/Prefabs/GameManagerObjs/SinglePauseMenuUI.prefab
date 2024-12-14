@@ -2250,7 +2250,7 @@ GameObject:
   - component: {fileID: 38486543791674487}
   - component: {fileID: 4268523483184491635}
   - component: {fileID: 5730958778419111759}
-  - component: {fileID: 9207964943519892650}
+  - component: {fileID: 2663327858461272979}
   m_Layer: 5
   m_Name: SettingsPanelUI
   m_TagString: Untagged
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9207964943519892650
+--- !u!114 &2663327858461272979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2331,7 +2331,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7638740939764178516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2e632734d41f1c48a1d2143606ee27c, type: 3}
+  m_Script: {fileID: 11500000, guid: fd06b41bf6a5d3e4b9e6d43600c2fe28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   masterSlider: {fileID: 3480125591599953650}
