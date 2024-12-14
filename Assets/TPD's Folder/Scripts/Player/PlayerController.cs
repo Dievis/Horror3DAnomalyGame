@@ -55,6 +55,7 @@ namespace DACNNEWMAP.PlayerControl
                 Camera.gameObject.SetActive(false);
                 Destroy(_playerRigidbody);
                 Destroy(_inputManager);
+                playerHUD.SetActive(false); // Tắt HUD cho người chơi khác
                 return;
             }
 
@@ -222,9 +223,10 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (staminaBar != null)
             {
-                staminaBar.fillAmount = currentStamina / maxStamina;
+                staminaBar.fillAmount = currentStamina / maxStamina;  // Cập nhật UI thanh stamina
             }
         }
+
 
         // Photon RPC để đồng bộ stamina với các máy khách khác
         [PunRPC]
@@ -238,7 +240,7 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (PhotonNetwork.IsConnected && photonView.IsMine)
             {
-                photonView.RPC("UpdateStamina", RpcTarget.Others, currentStamina); // Đồng bộ stamina cho các máy khách khác
+                photonView.RPC("UpdateStamina", RpcTarget.Others, currentStamina);  // Đồng bộ stamina cho các máy khách khác
             }
         }
 
@@ -246,17 +248,23 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (stream.IsWriting)
             {
+                // Gửi thông tin về stamina và các thành phần cần đồng bộ
                 stream.SendNext(currentStamina);
                 stream.SendNext(_grounded);
                 stream.SendNext(_currentVelocity);
             }
             else
             {
+                // Nhận thông tin từ các máy khách khác
                 currentStamina = (float)stream.ReceiveNext();
                 _grounded = (bool)stream.ReceiveNext();
                 _currentVelocity = (Vector2)stream.ReceiveNext();
-                UpdateStaminaUI();
+                if (photonView.IsMine)
+                {
+                    UpdateStaminaUI();
+                }
             }
         }
+
     }
 }

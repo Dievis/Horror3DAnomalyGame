@@ -7,8 +7,11 @@ using UnityEngine.SceneManagement;
 public class TransitionManagerUI : MonoBehaviour
 {
     public CinemachineVirtualCamera currentCamera;
-    public GameObject loadingPanel; // Panel kết nối
 
+    public void Awake()
+    {
+        UnlockCursor();
+    }
 
     public void Start()
     {
@@ -28,22 +31,27 @@ public class TransitionManagerUI : MonoBehaviour
     public void Singleplayer()
     {
         // Hiển thị panel loading khi bắt đầu chơi
-        loadingPanel.SetActive(true);
-        SceneManager.LoadScene("SingleplayerScene");
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
     }
 
     public void Multiplayer()
     {
         // Chuyển đến LoadingScene trước khi vào LobbyScene
-        //Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.LobbyScene);
 
         //Chuyển thẳng đến lobbyScene
-        SceneManager.LoadScene("LobbyScene");
+        //SceneManager.LoadScene("LobbyScene");
     }
 
     public void Exit()
     {
         Application.Quit();
+    }
+
+    private void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -7,32 +6,43 @@ using TMPro;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-    public TMP_InputField usernameInput; // Input field để nhập username
-    public TMP_Text buttonText; // Hiển thị trạng thái kết nối
-    public GameObject lobbyPanel; // Panel hiển thị Lobby
-    public GameObject roomPanel; // Panel khi người dùng vào phòng
-    public TMP_Text roomName; // Tên phòng hiện tại
+    [Header("UI Elements - Connection")]
+    public TMP_InputField usernameInput;
+    public TMP_Text buttonText;
+    public GameObject connectPanel;
+    public GameObject loadingPanel;
 
+    [Header("UI Elements - Lobby")]
+    public GameObject lobbyPanel;
+    public GameObject roomPanel;
+    public TMP_InputField roomnameInput;
+    public TMP_Text maxPlayersText;
+    public TMP_Text roomName;
+
+    [Header("Room Management")]
     public RoomItemUI roomItemPrefab;
-    List<RoomItemUI> roomItemsList = new List<RoomItemUI>();
+    private List<RoomItemUI> roomItemsList = new List<RoomItemUI>();
     public Transform contentObject;
 
+    [Header("Update Settings")]
     public float timeBetweenUpdates = 1.5f;
-    float nextUpdateTime;
+    private float nextUpdateTime;
 
+    [Header("Player Management")]
     public List<PlayerItemUI> playerItemsList = new List<PlayerItemUI>();
     public PlayerItemUI playerItemPrefab;
     public Transform playerItemParent;
 
+    [Header("Gameplay UI")]
     public GameObject playButton;
-    public GameObject connectPanel; // Panel kết nối
-    public GameObject loadingPanel; // Panel kết nối
+
+    private bool canPlay = false;
 
     public void Start()
     {
-        connectPanel.SetActive(true); // Hiển thị panel kết nối
+        connectPanel.SetActive(true);
         lobbyPanel.SetActive(false);
-        loadingPanel.SetActive(false);  // Ẩn Lobby panel khi chưa kết nối
+        loadingPanel.SetActive(false);
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
@@ -42,51 +52,44 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (usernameInput.text.Length >= 1)
         {
             PhotonNetwork.NickName = usernameInput.text;
-            //buttonText.text = "Đang kết nối...";
-
-            // Kiểm tra xem Photon có đang kết nối hay không
             if (!PhotonNetwork.IsConnected)
             {
-                // Nếu chưa kết nối, thực hiện kết nối với Photon
-                PhotonNetwork.ConnectUsingSettings();
                 buttonText.text = "Đang kết nối...";
+                PhotonNetwork.ConnectUsingSettings();
                 Debug.Log("Đang kết nối lại với Photon...");
             }
             else
             {
-                // Nếu đã kết nối rồi, thông báo người dùng
-                Debug.LogWarning("Photon đã kết nối sẵn, không cần kết nối lại.");
+                connectPanel.SetActive(false);
+                lobbyPanel.SetActive(true);
+                PhotonNetwork.JoinLobby();
+                Debug.LogWarning("Photon đã kết nối sẵn.");
             }
         }
+        else
+        {
+            Debug.LogWarning("Vui lòng nhập tên người dùng.");
+        }
     }
-
 
     // Khi kết nối thành công
     public override void OnConnectedToMaster()
     {
-        connectPanel.SetActive(false); // Ẩn panel kết nối khi kết nối thành công
-        lobbyPanel.SetActive(true); // Hiển thị Lobby panel sau khi kết nối
-        PhotonNetwork.JoinLobby(); // Vào lobby của Photon
+        connectPanel.SetActive(false);
+        lobbyPanel.SetActive(true);
+        PhotonNetwork.JoinLobby();
     }
 
     // Tạo phòng mới
     public void OnClickCreate()
     {
-        if (usernameInput.text.Length >= 1)
+        if (roomnameInput.text.Length >= 1)
         {
-            PhotonNetwork.CreateRoom(usernameInput.text, new RoomOptions() { MaxPlayers = 4 });
-        }
-    }
-
-    public void KickPlayer(Player playerToKick)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            PhotonNetwork.CloseConnection(playerToKick);
+            PhotonNetwork.CreateRoom(roomnameInput.text, new RoomOptions() { MaxPlayers = 4 });
         }
         else
         {
-            Debug.LogWarning("Only the Master Client can kick players.");
+            Debug.LogError("Please enter a room name.");
         }
     }
 
@@ -96,58 +99,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         lobbyPanel.SetActive(false);
         roomPanel.SetActive(true);
         roomName.text = "Phòng: " + PhotonNetwork.CurrentRoom.Name;
+
+        // Hiển thị số người chơi hiện tại và tối đa trong phòng
+        int currentPlayers = PhotonNetwork.CurrentRoom.PlayerCount;
+        int maxPlayers = PhotonNetwork.CurrentRoom.MaxPlayers;
+        maxPlayersText.text = "Số người chơi: " + currentPlayers + "/" + maxPlayers;
+
+        // In ra thông báo Master Client
+        Debug.Log("Master Client: " + PhotonNetwork.MasterClient.NickName);
+
         UpdatePlayerList();
     }
-
-    // Cập nhật danh sách phòng
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
-        if (Time.time >= nextUpdateTime)
-        {
-            UpdateRoomList(roomList);
-            nextUpdateTime = Time.time + timeBetweenUpdates;
-        }
-    }
-
-    void UpdateRoomList(List<RoomInfo> list)
-    {
-        foreach (RoomItemUI item in roomItemsList)
-        {
-            Destroy(item.gameObject);
-        }
-        roomItemsList.Clear();
-
-        foreach (RoomInfo room in list)
-        {
-            RoomItemUI newRoom = Instantiate(roomItemPrefab, contentObject);
-            newRoom.SetRoomName(room.Name);
-            roomItemsList.Add(newRoom);
-        }
-    }
-
-    public void OnClickRefreshRooms()
-    {
-        PhotonNetwork.JoinLobby();   // Gia nhập lại lobby để cập nhật danh sách phòng
-    }
-
-
-    public void JoinRoom(string roomName)
-    {
-        PhotonNetwork.JoinRoom(roomName);
-    }
-
-    public void OnClickLeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    // Khi rời khỏi phòng
-    public override void OnLeftRoom()
-    {
-        roomPanel.SetActive(false);
-        lobbyPanel.SetActive(true);
-    }
-
 
 
     // Cập nhật danh sách người chơi
@@ -167,25 +129,50 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
         {
             PlayerItemUI newPlayerItem = Instantiate(playerItemPrefab, playerItemParent);
-            newPlayerItem.SetPlayerInfo(player.Value);
-
-            playerItemsList.Add(newPlayerItem);
+            if (newPlayerItem != null)
+            {
+                newPlayerItem.SetPlayerInfo(player.Value);
+                playerItemsList.Add(newPlayerItem);
+                // Gọi UpdateReadyState trên đối tượng PlayerItemUI vừa tạo
+                newPlayerItem.UpdateReadyState();
+            }
+            else
+            {
+                Debug.LogError("PlayerItemUI prefab is not assigned.");
+            }
         }
     }
 
-    public override void OnPlayerEnteredRoom(Player player)
+
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         UpdatePlayerList();
+        CheckCanPlay();
     }
 
-    public override void OnPlayerLeftRoom(Player player)
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        UpdatePlayerList();
+        base.OnPlayerLeftRoom(otherPlayer);
+        UpdatePlayerList(); // Cập nhật lại danh sách người chơi
     }
 
-    private void Update()
+
+    private void CheckCanPlay()
     {
-        if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount >= 1)
+        // Đảm bảo chỉ có MasterClient mới có thể thấy nút Play khi tất cả người chơi đã sẵn sàng
+        bool allReady = true;
+        foreach (Player player in PhotonNetwork.CurrentRoom.Players.Values)
+        {
+            if (!player.CustomProperties.ContainsKey("IsReady") || !(bool)player.CustomProperties["IsReady"])
+            {
+                allReady = false;
+                break;
+            }
+        }
+
+        // Chỉ hiển thị nút Play khi là master client và tất cả người chơi đã sẵn sàng
+        if (PhotonNetwork.IsMasterClient && allReady)
         {
             playButton.SetActive(true);
         }
@@ -195,14 +182,63 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    private void OnClickReadyButton()
+    {
+        bool isReady = PhotonNetwork.LocalPlayer.CustomProperties.ContainsKey("IsReady") &&
+                       (bool)PhotonNetwork.LocalPlayer.CustomProperties["IsReady"];
+
+        // Gửi trạng thái mới lên Photon
+        ExitGames.Client.Photon.Hashtable playerProps = new ExitGames.Client.Photon.Hashtable
+    {
+        { "IsReady", !isReady }
+    };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerProps);
+
+        // Cập nhật trạng thái UI cho tất cả các client
+        UpdatePlayerReadyState();
+    }
+
+    void UpdatePlayerReadyState()
+    {
+        foreach (PlayerItemUI item in playerItemsList)
+        {
+            item.UpdateReadyState();  // Gọi phương thức UpdateReadyState() của từng PlayerItemUI
+        }
+    }
+
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        if (changedProps.ContainsKey("IsReady"))
+        {
+            UpdatePlayerList();  // Cập nhật lại danh sách người chơi để hiển thị trạng thái mới
+            CheckCanPlay();  // Kiểm tra lại điều kiện để xem nút Play có cần kích hoạt hay không
+        }
+    }
+
+
     public void OnClickPlayButton()
     {
-        // Hiển thị panel loading khi bắt đầu chơi
         loadingPanel.SetActive(true);
-
-        // Chuyển tới scene của trò chơi (Photon sẽ xử lý việc tải scene)
-        PhotonNetwork.LoadLevel("MultiplayerScene");
+        PhotonNetwork.LoadLevel("Game");
     }
+
+    public void OnClickLeaveRoom()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+    }
+
+    public override void OnLeftRoom()
+    {
+        roomPanel.SetActive(false);
+        lobbyPanel.SetActive(true);
+        PhotonNetwork.JoinLobby();  // Làm mới danh sách phòng khi rời khỏi
+    }
+
 
     public void OnClickBackToMenu()
     {
@@ -210,8 +246,43 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LeaveRoom();
         }
-
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
+    }
 
+    // Khi bấm nút làm mới danh sách phòng
+    public void OnClickRefreshRooms()
+    {
+        if (PhotonNetwork.InLobby)
+        {
+            PhotonNetwork.JoinLobby();  // Gọi lại JoinLobby để làm mới danh sách phòng
+        }
+        else
+        {
+            Debug.LogWarning("Không trong sảnh, không thể làm mới ds phòng.");
+        }
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (RoomItemUI item in roomItemsList)
+        {
+            Destroy(item.gameObject);
+        }
+        roomItemsList.Clear();
+
+        foreach (RoomInfo room in roomList)
+        {
+            if (!room.RemovedFromList)
+            {
+                RoomItemUI newRoom = Instantiate(roomItemPrefab, contentObject);
+                newRoom.SetRoomInfo(room.Name, this);
+                roomItemsList.Add(newRoom);
+            }
+        }
+    }
+
+    public void JoinRoom(string roomName)
+    {
+        PhotonNetwork.JoinRoom(roomName);
     }
 }
