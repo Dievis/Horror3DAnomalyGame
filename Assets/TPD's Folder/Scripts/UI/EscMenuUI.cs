@@ -8,8 +8,13 @@ public class EscMenuUI : MonoBehaviourPun
     public GameObject SettingsPanel;   // Settings Panel UI
     private bool isPaused = false;       // Trạng thái pause của player local
 
+    private UIManager uiManager;
+
+
     void Start()
     {
+        // Khởi tạo UIManager và các giá trị ban đầu
+        uiManager = FindObjectOfType<UIManager>();
         // Ẩn các UI ngay khi bắt đầu
         EscMenuPanel.SetActive(false);
         SettingsPanel.SetActive(false);
@@ -95,7 +100,10 @@ public class EscMenuUI : MonoBehaviourPun
     public void OnClickBackToMenu()
     {
         Debug.Log("Quay lại menu chính.");
-        UnlockCursor();  // Mở khóa con trỏ trước khi thoát
+        if (uiManager != null)
+        {
+            uiManager.ResetUI(); 
+        }
         PhotonNetwork.LeaveRoom(); // Thoát khỏi phòng
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene); // Load scene menu chính
     }

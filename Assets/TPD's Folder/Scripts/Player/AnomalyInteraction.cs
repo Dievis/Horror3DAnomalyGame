@@ -97,8 +97,15 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
                     // Kích hoạt glitch effect trên tất cả client
                     photonView.RPC("ActivateGlitchEffect", RpcTarget.All);
 
-                    // Gửi thông báo đến GameManager để tăng số lượng anomaly đã xóa
-                    photonView.RPC("NotifyAnomalyFound", RpcTarget.All);
+                    PhotonView gameManagerPhotonView = GameManager.instance.GetComponent<PhotonView>();
+                    if (gameManagerPhotonView != null)
+                    {
+                        gameManagerPhotonView.RPC("NotifyAnomalyFound", RpcTarget.All);
+                    }
+                    else
+                    {
+                        Debug.LogError("GameManager does not have PhotonView!");
+                    }
 
                     // Reset lại trạng thái nhìn vào anomaly
                     isLookingAtAnomaly = false;

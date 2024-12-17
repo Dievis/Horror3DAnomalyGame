@@ -1,4 +1,6 @@
 ﻿using Photon.Pun;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
@@ -8,84 +10,140 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private int anomaliesFound = 0;     // Số anomalies đã tìm thấy
     [SerializeField] private float gameDuration = 60f;   // Thời gian game
     [SerializeField] private float timer;               // Bộ đếm thời gian
-    private bool gameEnded = false;                      // Cờ kết thúc game
+    private bool gameEnded = false;
+
+    // Singleton instance
+    public static GameManager instance;  // Cờ kết thúc game
 
     private UIManager uiManager;
+    private HashSet<GameObject> anomaliesProcessed = new HashSet<GameObject>();  // Set các anomalies đã được xử lý (tìm thấy hoặc tiêu diệt)
+
+    private void Awake()
+    {
+        // Khởi tạo Singleton
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject); // Giữ GameManager không bị hủy khi scene đổi
+    }
 
     private void Start()
     {
-        PhotonView photonView = GetComponent<PhotonView>();
-        // Khởi tạo UIManager và các giá trị ban đầu
         uiManager = FindObjectOfType<UIManager>();
         timer = gameDuration;
 
-        // Cập nhật tổng số anomalies từ số lượng GameObject có tag "Anomaly"
-        totalAnomalies = GameObject.FindGameObjectsWithTag("Anomaly").Length;
+        // Reset UI ngay lập tức để đảm bảo không có UI bị hiển thị sai
+        uiManager.ResetUI();
 
-        // Cập nhật UI ban đầu
+        // Cập nhật lại UI ban đầu
         uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
         uiManager.UpdateTimerUI(timer);
+
+        // Bắt đầu game với anomalies
+        StartCoroutine(WaitForAnomaliesToSpawn());
+    }
+
+    // Coroutine để chờ anomalies spawn
+    private IEnumerator WaitForAnomaliesToSpawn()
+    {
+        // Chờ một khoảng thời gian nhất định để anomalies spawn
+        float waitTime = 5f; // Ví dụ chờ 5 giây
+        yield return new WaitForSeconds(waitTime);
+
+        // Kiểm tra tổng số anomalies sau khi chờ
+        totalAnomalies = GameObject.FindGameObjectsWithTag("Anomaly").Length;
+
+        if (totalAnomalies > 0)
+        {
+            Debug.Log("Game started! Total anomalies: " + totalAnomalies);
+            uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+        }
+        else
+        {
+            Debug.LogWarning("No anomalies found after waiting. Game will not start.");
+            // Nếu không có anomalies, kết thúc game ngay lập tức
+            EndGame(false);
+        }
     }
 
     private void Update()
     {
         if (gameEnded) return;
 
-        // Giảm thời gian mỗi frame
         timer -= Time.deltaTime;
         uiManager.UpdateTimerUI(timer);
 
-        // Kết thúc game nếu thời gian còn lại <= 0
         if (timer <= 0f) EndGame(false);
+        //if (anomaliesProcessed.Count == totalAnomalies) EndGame(true);
 
-        // Nếu không còn anomaly nào, game thắng
-        if (totalAnomalies <= 0) EndGame(true);
-
-        // Kiểm tra nhấn phím Tab để hiển thị/ẩn thông tin game
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             uiManager.ToggleMatchInfoPanel();
         }
     }
 
-    // RPC để thông báo khi một anomaly bị tìm thấy và xóa
+    // Phương thức thông báo tìm thấy anomaly
     [PunRPC]
-    public void NotifyAnomalyFound()
+    public void NotifyAnomalyFound(GameObject anomaly)
     {
-        anomaliesFound++;  // Tăng số lượng anomaly đã tìm thấy
-        totalAnomalies--;  // Giảm tổng số anomaly còn lại
-
-        Debug.Log("Anomaly found! Total anomalies found: " + anomaliesFound);
-
-        // Cập nhật UI với số anomalies đã tìm thấy và còn lại
-        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
-
-        // Nếu không còn anomaly nào, game thắng
-        if (totalAnomalies <= 0)
+        if (!anomaliesProcessed.Contains(anomaly))
         {
-            EndGame(true);
+            anomaliesProcessed.Add(anomaly);
+            anomaliesFound++;
+            Debug.Log("Anomaly found! Total anomalies found: " + anomaliesFound);
+
+            uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies - anomaliesProcessed.Count);
+
+            photonView.RPC("CheckGameOver", RpcTarget.All);
         }
     }
 
-    // Phương thức này được gọi khi một anomaly bị xóa
-    public void OnAnomalyDestroyed()
+    [PunRPC]
+    private void CheckGameOver()
     {
-        totalAnomalies--;  // Giảm tổng số anomalies khi một anomaly biến mất
-        Debug.Log("Anomaly destroyed! Remaining anomalies: " + totalAnomalies);
-
-        // Cập nhật UI với số anomalies còn lại
-        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
-
-        // Nếu không còn anomaly nào, game thắng
-        if (totalAnomalies <= 0)
+        if (anomaliesProcessed.Count == totalAnomalies)
         {
-            EndGame(true);
+            EndGame(true);  // Chiến thắng khi tất cả anomalies đã bị xử lý
+        }
+        else if (timer <= 0f)
+        {
+            EndGame(false);  // Thua khi hết thời gian
         }
     }
 
     private void EndGame(bool victory)
     {
+        if (gameEnded) return;
+
         gameEnded = true;
-        uiManager.ShowEndGameUI(victory);  // Hiển thị UI kết thúc game
+        photonView.RPC("ShowEndGameUI", RpcTarget.All, victory);
+    }
+
+    public void ShowEndGameUI(bool victory)
+    {
+        uiManager.ShowEndGameUI(victory); // Hiển thị UI chiến thắng/thua
+    }
+
+    public void ResetGame()
+    {
+        gameEnded = false;
+        anomaliesFound = 0;
+        timer = gameDuration;
+        anomaliesProcessed.Clear();
+
+        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+        uiManager.UpdateTimerUI(timer);
+        Debug.Log("Game has been reset.");
+    }
+
+    public void OnClickBackToMenu()
+    {
+        Debug.Log("Quay lại menu chính.");
+        PhotonNetwork.LeaveRoom(); // Thoát khỏi phòng
+        ResetGame();
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene); // Load scene menu chính
     }
 }

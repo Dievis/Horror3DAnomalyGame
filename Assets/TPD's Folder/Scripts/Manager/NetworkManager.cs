@@ -5,13 +5,15 @@ using System.Collections;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private GameObject hostLeftPanel;
-
+    private UIManager uiManager;
+    private GameManager gameManager;
     //Lưu trữ đầu tiên là MasterClient
     private Player initialMasterClient;
 
     private void Start()
     {
+        uiManager = FindObjectOfType<UIManager>();
+        gameManager = FindObjectOfType<GameManager>();
         initialMasterClient = PhotonNetwork.MasterClient;
     }
 
@@ -33,16 +35,29 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void HandleMasterClientLeft()
     {
-        Debug.Log("Master Client ban đầu đã rời đi, tất cả các client sẽ ngắt kết nối.");
-        ShowMasterDisconnectedMessage();
+        Debug.Log("Master Client ban đầu đã rời đi.");
+        if (uiManager != null)
+        {
+            uiManager.ShowHostLeftPanel(); // Hiển thị hostLeftPanel thông qua UIManager
+        }
+
         StartCoroutine(DisconnectAfterDelay());
     }
 
     private IEnumerator DisconnectAfterDelay()
     {
         yield return new WaitForSeconds(3);
+
         if (PhotonNetwork.IsConnectedAndReady)
         {
+            if (uiManager != null)
+            {
+                uiManager.ResetUI(); // Reset UI khi Master Client thay đổi
+            }
+            if (gameManager != null)
+            {
+                gameManager.ResetGame(); // Reset game khi rời phòng
+            }
             PhotonNetwork.LeaveRoom();
             Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
         }
@@ -74,22 +89,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private void ShowMasterDisconnectedMessage()
-    {
-        Debug.Log("Chủ phòng đã thoát, trở về menu chính...");
-        if (hostLeftPanel != null)
-        {
-            hostLeftPanel.SetActive(true);
-        }
-    }
-
     // Xử lý khi Master Client bị chuyển
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         if (!PhotonNetwork.IsMasterClient && newMasterClient != initialMasterClient)
         {
             Debug.Log("Master Client đã thay đổi, tất cả các client sẽ ngắt kết nối.");
-            ShowMasterDisconnectedMessage();
+            if (uiManager != null)
+            {
+                uiManager.ResetUI(); // Reset UI khi Master Client thay đổi
+            }
+            if (gameManager != null)
+            {
+                gameManager.ResetGame(); // Reset game khi Master Client thay đổi
+            }
             StartCoroutine(DisconnectAfterDelay());
         }
     }
@@ -97,20 +110,29 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // Xử lý khi bị ngắt kết nối
     public override void OnDisconnected(Photon.Realtime.DisconnectCause cause)
     {
-        Debug.Log("Ngắt kết nối: " + cause.ToString());
+        Debug.Log($"Ngắt kết nối: {cause}");
 
+        // Kiểm tra lý do ngắt kết nối
         if (cause == DisconnectCause.Exception || cause == DisconnectCause.DisconnectByServerLogic)
         {
+            Debug.Log("Master Client đã rời, tất cả các client sẽ ngắt kết nối.");
             if (!PhotonNetwork.IsMasterClient)
             {
-                Debug.Log("Master Client đã rời, tất cả các client sẽ ngắt kết nối.");
-                ShowMasterDisconnectedMessage();
+                uiManager.ShowHostLeftPanel(); // Hiển thị panel thông qua UIManager
                 StartCoroutine(DisconnectAfterDelay());
             }
         }
         else
         {
-            ShowMasterDisconnectedMessage(); // Các lý do ngắt kết nối khác không liên quan đến Master Client
+            if (uiManager != null)
+            {
+                uiManager.ResetUI(); 
+            }
+            if (gameManager != null)
+            {
+                gameManager.ResetGame(); 
+            }
         }
     }
+
 }
