@@ -10,10 +10,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private int anomaliesFound = 0;     // Số anomalies đã tìm thấy
     [SerializeField] private float gameDuration = 60f;   // Thời gian game
     [SerializeField] private float timer;               // Bộ đếm thời gian
+    [SerializeField][Range(0f, 1f)] private float victoryThreshold = 0.8f; // Tỷ lệ anomaly cần tìm để thắng
     private bool gameEnded = false;
 
     // Singleton instance
-    public static GameManager instance;  // Cờ kết thúc game
+    public static GameManager instance;
 
     private UIManager uiManager;
     private HashSet<GameObject> anomaliesProcessed = new HashSet<GameObject>();  // Set các anomalies đã được xử lý (tìm thấy hoặc tiêu diệt)
@@ -77,7 +78,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         uiManager.UpdateTimerUI(timer);
 
         if (timer <= 0f) EndGame(false);
-        //if (anomaliesProcessed.Count == totalAnomalies) EndGame(true);
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -87,9 +87,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     // Phương thức thông báo tìm thấy anomaly
     [PunRPC]
-    public void NotifyAnomalyFound(GameObject anomaly)
+    public void NotifyAnomalyFound(int anomalyViewID)
     {
-        if (!anomaliesProcessed.Contains(anomaly))
+        GameObject anomaly = PhotonView.Find(anomalyViewID)?.gameObject;
+        if (anomaly != null && !anomaliesProcessed.Contains(anomaly))
         {
             anomaliesProcessed.Add(anomaly);
             anomaliesFound++;
@@ -99,14 +100,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             photonView.RPC("CheckGameOver", RpcTarget.All);
         }
+        else
+        {
+            Debug.LogWarning("Anomaly is null or already processed.");
+        }
     }
 
     [PunRPC]
     private void CheckGameOver()
     {
-        if (anomaliesProcessed.Count == totalAnomalies)
+        float requiredAnomalies = totalAnomalies * victoryThreshold;
+        if (anomaliesFound >= requiredAnomalies)
         {
-            EndGame(true);  // Chiến thắng khi tất cả anomalies đã bị xử lý
+            EndGame(true);  // Chiến thắng khi đạt tỷ lệ anomalies yêu cầu
         }
         else if (timer <= 0f)
         {

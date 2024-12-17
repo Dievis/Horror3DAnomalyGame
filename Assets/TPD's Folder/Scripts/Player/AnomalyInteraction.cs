@@ -100,12 +100,13 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
                     PhotonView gameManagerPhotonView = GameManager.instance.GetComponent<PhotonView>();
                     if (gameManagerPhotonView != null)
                     {
-                        gameManagerPhotonView.RPC("NotifyAnomalyFound", RpcTarget.All);
+                        gameManagerPhotonView.RPC("NotifyAnomalyFound", RpcTarget.All, currentAnomaly.GetPhotonView().ViewID);
                     }
                     else
                     {
                         Debug.LogError("GameManager does not have PhotonView!");
                     }
+
 
                     // Reset lại trạng thái nhìn vào anomaly
                     isLookingAtAnomaly = false;
@@ -136,7 +137,11 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
         {
             // Gọi phương thức DestroyAnomaly từ AnomalyManager
             anomalyManager.DestroyAnomaly(anomalyViewID);
+
+            // Thông báo anomaly đã bị xử lý
+            GameManager.instance.GetComponent<PhotonView>().RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
         }
+
     }
 
     // RPC để kích hoạt glitch effect
