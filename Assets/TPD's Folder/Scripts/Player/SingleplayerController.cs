@@ -19,6 +19,8 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float Dis2Ground = 0.8f;
         [SerializeField] private LayerMask GroundCheck;
         [SerializeField] private float AirResistance = 0.8f;
+        [SerializeField] public float _walkSpeed = 2f;
+        [SerializeField] public float _runSpeed = 6f;
 
         [Header("Stamina Settings")]
         [SerializeField] private float maxStamina = 100f;
@@ -42,8 +44,7 @@ namespace DACNNEWMAP.PlayerControl
         private int _crouchHash;
         private float _xRotation;
 
-        private const float _walkSpeed = 2f;
-        private const float _runSpeed = 6f;
+
         private Vector2 _currentVelocity;
 
         private float currentStamina;

@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Utilitites/Electric Torch/Material.meta
+guid: 403e100413d07294d8d323bca3dd518d
+folderAsset: yes
+DefaultImporter:
+========
 guid: cd2aa475e9d8d1545b7b54bd9a5d3c95
 PrefabImporter:
+>>>>>>>> origin/TPD:Assets/TPD's Folder/Resources/Ano7.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Utilitites/Electric Torch/Prefab/Electric Torch LowPoly.prefab.meta
+guid: 05e57b7dd8c98764196ba07415ec4093
+========
 guid: 12d9a435028294e4886a2c7915ff1422
+>>>>>>>> origin/TPD:Assets/TPD's Folder/Resources/Ano5.prefab.meta
 PrefabImporter:
   externalObjects: {}
   userData: 
