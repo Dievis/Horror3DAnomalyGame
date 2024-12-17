@@ -113,7 +113,7 @@ namespace DACNNEWMAP.PlayerControl
                 {
                     currentStamina += staminaRegenRate * Time.deltaTime;
                     currentStamina = Mathf.Min(currentStamina, maxStamina);
-                }
+                }               
             }
 
             // Khi hết stamina, không thể chạy nữa
