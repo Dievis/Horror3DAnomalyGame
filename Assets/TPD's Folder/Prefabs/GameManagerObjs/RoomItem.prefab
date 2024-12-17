@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f94d514ae2846b84ca5ed1852210f9d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomName: {fileID: 8913769018230056611}
+  roomNameText: {fileID: 8913769018230056611}
 --- !u!114 &7040968898463317531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,7 +270,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 51931570904862210}
-        m_TargetAssemblyTypeName: RoomItem, Assembly-CSharp
+        m_TargetAssemblyTypeName: RoomItemUI, Assembly-CSharp
         m_MethodName: OnClickItem
         m_Mode: 1
         m_Arguments:

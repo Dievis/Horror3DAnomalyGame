@@ -1,88 +1,91 @@
 ﻿using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine;
-using System.Collections;
-using Photon.Pun.Demo.PunBasics;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    private GameObject hostLeftPanel; // Panel hiển thị khi chủ phòng thoát
+    [Header("Game Stats")]
+    [SerializeField] private int totalAnomalies;        // Tổng số anomalies
+    [SerializeField] private int anomaliesFound = 0;     // Số anomalies đã tìm thấy
+    [SerializeField] private float gameDuration = 60f;   // Thời gian game
+    [SerializeField] private float timer;               // Bộ đếm thời gian
+    private bool gameEnded = false;                      // Cờ kết thúc game
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
+    private UIManager uiManager;
+
+    private void Start()
     {
-        Debug.Log($"{otherPlayer.NickName} đã rời game.");
-        RemovePlayerObjects(otherPlayer);
+        PhotonView photonView = GetComponent<PhotonView>();
+        // Khởi tạo UIManager và các giá trị ban đầu
+        uiManager = FindObjectOfType<UIManager>();
+        timer = gameDuration;
 
-        // Kiểm tra nếu người chơi rời là chủ phòng
-        if (PhotonNetwork.IsMasterClient == false && otherPlayer.IsMasterClient)
+        // Cập nhật tổng số anomalies từ số lượng GameObject có tag "Anomaly"
+        totalAnomalies = GameObject.FindGameObjectsWithTag("Anomaly").Length;
+
+        // Cập nhật UI ban đầu
+        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+        uiManager.UpdateTimerUI(timer);
+    }
+
+    private void Update()
+    {
+        if (gameEnded) return;
+
+        // Giảm thời gian mỗi frame
+        timer -= Time.deltaTime;
+        uiManager.UpdateTimerUI(timer);
+
+        // Kết thúc game nếu thời gian còn lại <= 0
+        if (timer <= 0f) EndGame(false);
+
+        // Nếu không còn anomaly nào, game thắng
+        if (totalAnomalies <= 0) EndGame(true);
+
+        // Kiểm tra nhấn phím Tab để hiển thị/ẩn thông tin game
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
-            Debug.Log("Chủ phòng đã thoát. Quay lại menu.");
-
-            if (PhotonNetwork.IsConnectedAndReady)
-            {
-                ShowHostLeftPanel();
-            }
-            else
-            {
-                Debug.LogWarning("Photon client chưa sẵn sàng để xử lý việc chủ phòng rời đi.");
-            }
+            uiManager.ToggleMatchInfoPanel();
         }
     }
 
-
-    private void RemovePlayerObjects(Player player)
+    // RPC để thông báo khi một anomaly bị tìm thấy và xóa
+    [PunRPC]
+    public void NotifyAnomalyFound()
     {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        anomaliesFound++;  // Tăng số lượng anomaly đã tìm thấy
+        totalAnomalies--;  // Giảm tổng số anomaly còn lại
+
+        Debug.Log("Anomaly found! Total anomalies found: " + anomaliesFound);
+
+        // Cập nhật UI với số anomalies đã tìm thấy và còn lại
+        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+
+        // Nếu không còn anomaly nào, game thắng
+        if (totalAnomalies <= 0)
         {
-            PhotonView view = obj.GetComponent<PhotonView>();
-            if (view != null && view.Owner == player)
-            {
-                PhotonNetwork.Destroy(obj); // Xóa object của người chơi đã thoát
-            }
+            EndGame(true);
         }
     }
 
-    private void ShowHostLeftPanel()
+    // Phương thức này được gọi khi một anomaly bị xóa
+    public void OnAnomalyDestroyed()
     {
-        if (hostLeftPanel != null) hostLeftPanel.SetActive(true); // Hiển thị thông báo
-        StartCoroutine(ReturnToMenuAfterDelay());
-    }
+        totalAnomalies--;  // Giảm tổng số anomalies khi một anomaly biến mất
+        Debug.Log("Anomaly destroyed! Remaining anomalies: " + totalAnomalies);
 
-    private IEnumerator ReturnToMenuAfterDelay()
-    {
-        yield return new WaitForSeconds(3); // Đợi 3 giây trước khi quay lại menu
+        // Cập nhật UI với số anomalies còn lại
+        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
 
-        if (PhotonNetwork.IsConnectedAndReady)
+        // Nếu không còn anomaly nào, game thắng
+        if (totalAnomalies <= 0)
         {
-            PhotonNetwork.LeaveRoom();
-            Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
-        }
-        else
-        {
-            Debug.LogWarning("Photon client không còn kết nối khi đang rời phòng.");
+            EndGame(true);
         }
     }
 
-    // Xử lý khi client rời phòng (tự rời hoặc mất kết nối)
-    public override void OnDisconnected(DisconnectCause cause)
+    private void EndGame(bool victory)
     {
-        Debug.Log("Mất kết nối khỏi Photon.");
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene);
-    }
-
-    private void FindHostLeftPanel()
-    {
-        if (!photonView.IsMine) return;
-
-        hostLeftPanel = GameObject.FindGameObjectWithTag("HostLeftPanel");
-        if (hostLeftPanel == null)
-        {
-            Debug.LogWarning("Giao diện không tìm thấy!");
-        }
-        else
-        {
-            Debug.Log("Giao diện đã tìm thấy và gắn thành công.");
-        }
+        gameEnded = true;
+        uiManager.ShowEndGameUI(victory);  // Hiển thị UI kết thúc game
     }
 }

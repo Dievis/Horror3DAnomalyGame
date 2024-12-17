@@ -59,6 +59,17 @@ MonoBehaviour:
   - ResetAnomaly
   - SwitchAnomalyState
   - TransferOwnershipToAllClients
+  - OnAnomalyFound
+  - TogglePauseMenu
+  - ClosePauseMenuRPC
+  - OpenEscMenuRPC
+  - HandleMasterClientLeft
+  - RequestAnomalyDestruction
+  - NotifyAnomalyFound
+  - UpdateRecordingState
+  - RequestDestroyAnomaly
+  - DestroyAnomalyRPC
+  - ResetGlitchEffectRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -1,28 +1,34 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RoomItemUI : MonoBehaviour
 {
-    public TMP_Text roomName;
-    LobbyManager manager;
+    public TMP_Text roomNameText;
+    private LobbyManager manager;
 
-    private void Start()
+    public void SetRoomInfo(string roomName, LobbyManager lobbyManager)
     {
-        manager = FindObjectOfType<LobbyManager>();
-    }
-
-    public void SetRoomName(string _roomName)
-    {
-        if (roomName != null) { roomName.text = _roomName; }
+        if (roomNameText != null)
+        {
+            roomNameText.text = roomName;
+        }
         else
         {
-            Debug.LogError("roomName is not assigned!");
+            Debug.LogError("roomNameText is not assigned in RoomItemUI.");
         }
+
+        this.manager = lobbyManager;
     }
 
     public void OnClickItem()
     {
-        manager.JoinRoom(roomName.text);
+        if (manager != null)
+        {
+            manager.JoinRoom(roomNameText.text);
+        }
+        else
+        {
+            Debug.LogError("LobbyManager reference is missing in RoomItemUI.");
+        }
     }
 }

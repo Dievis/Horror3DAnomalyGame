@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4627060272528592404}
   - component: {fileID: 5717453026084695119}
   - component: {fileID: 3105822371857619275}
+  - component: {fileID: 8058189197334170115}
   m_Layer: 11
   m_Name: Ano3
   m_TagString: Anomaly
@@ -128,3 +129,15 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &8058189197334170115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3056934456484670918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21325d63fa6c9114a97e005c0f938408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
