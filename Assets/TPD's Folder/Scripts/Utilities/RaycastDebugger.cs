@@ -7,6 +7,7 @@ public class RaycastDebugger : MonoBehaviour
     public Color highlightColor = Color.yellow; // Màu chiếu sáng
     private GameObject currentHighlightedObject = null; // Đối tượng hiện tại đang được chiếu sáng
     private Color originalColor; // Lưu màu sắc ban đầu của đối tượng
+    public LayerMask interactableLayer; // Layer chứa các đối tượng có thể tương tác
 
     void Update()
     {
@@ -14,8 +15,8 @@ public class RaycastDebugger : MonoBehaviour
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        // Kiểm tra raycast có va chạm với đối tượng nào không
-        if (Physics.Raycast(ray, out hit, rayLength))
+        // Kiểm tra raycast có va chạm với đối tượng nào không và đối tượng phải nằm trong layer Interactable
+        if (Physics.Raycast(ray, out hit, rayLength, interactableLayer))
         {
             // Kiểm tra nếu đối tượng va chạm chưa được chiếu sáng
             if (currentHighlightedObject != hit.collider.gameObject)
