@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     public GameObject deathPanel;
     public GameObject cameRa;
 
+
     void Start()
     {
         walking = true;
@@ -57,6 +58,8 @@ public class EnemyAI : MonoBehaviour
                 player.gameObject.SetActive(false);
                 aiAnim.ResetTrigger("walk");
                 aiAnim.ResetTrigger("idle");
+                hideText.SetActive(false);
+                stopHideText.SetActive(false);
                 aiAnim.ResetTrigger("sprint");
                 aiAnim.SetTrigger("jumpscare");
                 StartCoroutine(deathRoutine());
