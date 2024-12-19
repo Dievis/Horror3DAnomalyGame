@@ -110,5 +110,13 @@ public class EnemyAI : MonoBehaviour
         cameRa.SetActive(true);
         yield return new WaitForSeconds(jumpscareTime);
         deathPanel.SetActive(true);
+        UnlockCursor();
     }
+    private void UnlockCursor()
+    {
+        // Mở khóa con trỏ khi cần thiết
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Photon.Pun;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject losePanel;
     [SerializeField] private GameObject matchInfoPanel;
+    [SerializeField] private GameObject hostLeftPanel; // Thêm hostLeftPanel
     [SerializeField] private TMP_Text anomalyCountText;
     [SerializeField] private TMP_Text timerText;
 
@@ -20,6 +22,7 @@ public class UIManager : MonoBehaviour
         timerText.text = $"Time: {Mathf.CeilToInt(timer)}s";
     }
 
+    [PunRPC]
     public void ShowEndGameUI(bool victory)
     {
         if (victory)
@@ -32,8 +35,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowHostLeftPanel()
+    {
+        if (hostLeftPanel != null)
+        {
+            hostLeftPanel.SetActive(true);
+        }
+    }
+
     public void ToggleMatchInfoPanel()
     {
         matchInfoPanel.SetActive(!matchInfoPanel.activeSelf);
+    }
+
+    
+
+    public void ResetUI()
+    {
+        if (winPanel != null) winPanel.SetActive(false);
+        if (losePanel != null) losePanel.SetActive(false);
+        if (matchInfoPanel != null) matchInfoPanel.SetActive(false);
+        if (hostLeftPanel != null) hostLeftPanel.SetActive(false); // Reset hostLeftPanel
     }
 }

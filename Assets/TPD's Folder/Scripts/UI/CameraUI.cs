@@ -12,6 +12,7 @@ public class CameraUI : MonoBehaviourPunCallbacks
     public bool isRecording = false;  // Trạng thái quay video
     public GameObject cameraUIPanel;          // Tham chiếu đến Panel chứa các UI cần hiển thị/ẩn
 
+
     void Start()
     {
         // Đảm bảo panel được ẩn khi bắt đầu
