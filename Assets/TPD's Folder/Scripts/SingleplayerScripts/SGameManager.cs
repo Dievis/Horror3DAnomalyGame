@@ -19,6 +19,9 @@ public class SGameManager : MonoBehaviour
     private SUserInterfaceManager SUIManager;  // Quản lý giao diện người dùng
     private HashSet<GameObject> anomaliesProcessed = new HashSet<GameObject>();  // Tập hợp các anomalies đã được xử lý (tìm thấy hoặc đã xóa)
 
+    // Thêm biến theo dõi trạng thái quay video
+    public bool isRecording = false;  // Biến này sẽ theo dõi xem video có đang quay hay không
+
     private void Awake()
     {
         // Singleton pattern (đảm bảo chỉ có một instance của SGameManager)
@@ -65,7 +68,7 @@ public class SGameManager : MonoBehaviour
             SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
 
             // Gọi HideTutorialPanel khi tất cả anomalies đã spawn xong
-            SUIManager.HideTutorialPanel();
+            SUIManager.ShowExitButton();
         }
         else
         {
@@ -79,9 +82,12 @@ public class SGameManager : MonoBehaviour
     {
         if (gameEnded) return;
 
-        // Giảm thời gian
-        timer -= Time.deltaTime;
-        SUIManager.UpdateTimerUI(timer);
+        // Chỉ giảm thời gian khi đang quay video
+        if (isRecording)
+        {
+            timer -= Time.deltaTime;
+            SUIManager.UpdateTimerUI(timer);
+        }
 
         // Kết thúc game nếu hết thời gian
         if (timer <= 0f) EndGame(false);
@@ -102,8 +108,13 @@ public class SGameManager : MonoBehaviour
             anomaliesFound++;  // Tăng số lượng anomalies đã tìm thấy
             Debug.Log("Anomaly found! Total anomalies found: " + anomaliesFound);
 
+            // Tăng thời gian gameDuration thêm 4 giây
+            timer += 20f;
+            Debug.Log("Game duration extended by 4 seconds. New duration: " + timer);
+
             // Cập nhật UI số lượng anomalies đã tìm thấy
             SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies - anomaliesProcessed.Count);
+            SUIManager.UpdateTimerUI(timer);
 
             // Kiểm tra xem game có kết thúc không sau mỗi lần tìm thấy anomaly
             CheckGameOver();
@@ -165,6 +176,7 @@ public class SGameManager : MonoBehaviour
         ResetGame();
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene); // Load lại cảnh menu chính
     }
+
     private void UnlockCursor()
     {
         // Mở khóa con trỏ khi cần thiết
