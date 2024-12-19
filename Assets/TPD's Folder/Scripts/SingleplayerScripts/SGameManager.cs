@@ -39,7 +39,7 @@ public class SGameManager : MonoBehaviour
         timer = gameDuration;  // Khởi tạo thời gian
 
         // Hiển thị Panel Hướng dẫn khi game bắt đầu
-        SUIManager.ShowTutorialPanel();
+        //SUIManager.ShowTutorialPanel();
 
         // Reset UI ngay lập tức để tránh hiển thị sai thông tin
         SUIManager.ResetUI();
@@ -68,7 +68,7 @@ public class SGameManager : MonoBehaviour
             SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
 
             // Gọi HideTutorialPanel khi tất cả anomalies đã spawn xong
-            SUIManager.ShowExitButton();
+            //SUIManager.ShowExitButton();
         }
         else
         {
