@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SUserInterfaceManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class SUserInterfaceManager : MonoBehaviour
     [SerializeField] private GameObject matchInfoPanel;  // Panel thông tin trận đấu
     [SerializeField] private TMP_Text anomalyCountText;  // Text hiển thị số lượng anomaly đã tìm thấy
     [SerializeField] private TMP_Text timerText;  // Text hiển thị thời gian còn lại
+    [SerializeField] private GameObject PlayerHUD;
+    [SerializeField] private GameObject ExitButton;
 
     // Cập nhật số lượng anomaly trong UI
     public void UpdateAnomalyCountUI(int anomaliesFound, int totalAnomalies)
@@ -27,7 +30,9 @@ public class SUserInterfaceManager : MonoBehaviour
     public void ShowTutorialPanel()
     {
         if (tutorialPanel == null) return;
-        tutorialPanel.SetActive(true);  // Kích hoạt panel hướng dẫn
+        tutorialPanel.SetActive(true); // Kích hoạt panel hướng dẫn
+        PlayerHUD.SetActive(false);
+        UnlockCursor();
     }
 
     // Ẩn panel hướng dẫn
@@ -35,6 +40,21 @@ public class SUserInterfaceManager : MonoBehaviour
     {
         if (tutorialPanel == null) return;
         tutorialPanel.SetActive(false);  // Tắt panel hướng dẫn
+        PlayerHUD.SetActive(true);
+        LockCursor();
+    }
+
+
+    public void ShowExitButton()
+    {
+        if (ExitButton == null) return;
+        ExitButton.SetActive(true);  // Hiển thị nút ExitButton
+    }
+
+    // Thêm phương thức để xử lý khi nhấn ExitButton
+    public void OnExitButtonClick()
+    {
+        HideTutorialPanel();  // Ẩn panel hướng dẫn khi nhấn ExitButton
     }
 
     // Hiển thị UI khi kết thúc trò chơi (thắng hoặc thua)
@@ -63,4 +83,18 @@ public class SUserInterfaceManager : MonoBehaviour
         if (losePanel != null) losePanel.SetActive(false);  // Tắt panel thất bại
         if (matchInfoPanel != null) matchInfoPanel.SetActive(false);  // Tắt panel thông tin trận đấu
     }
+
+    private void UnlockCursor()
+    {
+        // Mở khóa con trỏ khi cần thiết
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;  // Khóa con trỏ chuột
+        Cursor.visible = false;  // Ẩn con trỏ chuột
+    }
+
 }
