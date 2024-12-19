@@ -128,13 +128,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     void UpdatePlayerList()
     {
-        // Đảm bảo danh sách người chơi được cập nhật chính xác
+        // Xóa các item người chơi cũ nếu chúng còn tồn tại
         foreach (PlayerItemUI item in playerItemsList)
         {
-            Destroy(item.gameObject);
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+            }
         }
         playerItemsList.Clear();
 
+        // Tạo lại các item người chơi mới
         foreach (KeyValuePair<int, Player> kvp in PhotonNetwork.CurrentRoom.Players)
         {
             Player player = kvp.Value;
@@ -175,6 +179,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void OnClickPlayButton()
     {
+        // Cập nhật trạng thái phòng trước khi chuyển cảnh
+        PhotonNetwork.CurrentRoom.IsVisible = false; // Phòng không còn hiển thị trong danh sách
+        PhotonNetwork.CurrentRoom.IsOpen = false;    // Chặn người chơi mới vào phòng
+
+        // Load scene game
         PhotonNetwork.LoadLevel("Game");
     }
 
@@ -183,15 +192,49 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.InRoom)
         {
             PhotonNetwork.LeaveRoom();
+
+            // Kiểm tra xem roomPanel có đang hoạt động không trước khi thực hiện hành động
+            if (roomPanel != null && roomPanel.activeInHierarchy)
+            {
+                roomPanel.SetActive(false);  // Tắt roomPanel
+            }
+            else
+            {
+                Debug.LogWarning("roomPanel is not active.");
+            }
+
+            if (lobbyPanel != null)
+            {
+                lobbyPanel.SetActive(true);  // Kích hoạt lobbyPanel
+            }
+
+            PhotonNetwork.JoinLobby();  // Gia nhập lại lobby
         }
     }
 
+
+
     public override void OnLeftRoom()
     {
-        roomPanel.SetActive(false);
-        lobbyPanel.SetActive(true);
-        PhotonNetwork.JoinLobby();
+        // Kiểm tra xem roomPanel có đang hoạt động không trước khi thực hiện hành động
+        if (roomPanel != null && roomPanel.activeInHierarchy)
+        {
+            roomPanel.SetActive(false);  // Tắt roomPanel
+        }
+        else
+        {
+            Debug.LogWarning("roomPanel is not active.");
+        }
+
+        if (lobbyPanel != null)
+        {
+            lobbyPanel.SetActive(true);  // Kích hoạt lobbyPanel
+        }
+
+        PhotonNetwork.JoinLobby();  // Gia nhập lại lobby
     }
+
+
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {

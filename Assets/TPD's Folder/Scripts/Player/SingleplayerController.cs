@@ -1,4 +1,4 @@
-﻿//SingleplayerController
+﻿// SingleplayerController
 
 using DACNNEWMAP.Manager;
 using UnityEngine;
@@ -19,6 +19,8 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float Dis2Ground = 0.8f;
         [SerializeField] private LayerMask GroundCheck;
         [SerializeField] private float AirResistance = 0.8f;
+        [SerializeField] public float _walkSpeed = 2f;
+        [SerializeField] public float _runSpeed = 6f;
 
         [Header("Stamina Settings")]
         [SerializeField] private float maxStamina = 100f;
@@ -42,8 +44,6 @@ namespace DACNNEWMAP.PlayerControl
         private int _crouchHash;
         private float _xRotation;
 
-        private const float _walkSpeed = 2f;
-        private const float _runSpeed = 6f;
         private Vector2 _currentVelocity;
 
         private float currentStamina;
@@ -123,6 +123,22 @@ namespace DACNNEWMAP.PlayerControl
 
             UpdateStaminaUI();  // Cập nhật UI stamina
 
+            // Tính toán độ dốc và điều chỉnh lực di chuyển
+            Vector3 moveDirection = transform.TransformDirection(new Vector3(_inputManager.Move.x, 0, _inputManager.Move.y));
+            RaycastHit hitInfo;
+            if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 1f))
+            {
+                Vector3 surfaceNormal = hitInfo.normal;
+                Vector3 flatSurfaceNormal = new Vector3(surfaceNormal.x, 0, surfaceNormal.z).normalized;
+                float angle = Vector3.Angle(Vector3.up, flatSurfaceNormal);
+
+                // Điều chỉnh tốc độ và lực dựa trên độ nghiêng
+                if (angle > 20f) // Nếu độ dốc quá lớn, giảm tốc độ di chuyển
+                {
+                    targetSpeed *= 0.5f; // giảm tốc độ
+                }
+            }
+
             _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _inputManager.Move.x * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
             _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _inputManager.Move.y * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
 
@@ -136,7 +152,6 @@ namespace DACNNEWMAP.PlayerControl
             _animator.SetFloat(_yVelHash, _currentVelocity.y);
             _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);  // Điều khiển animation chạy
         }
-
 
         private void CamMovements()
         {
@@ -199,6 +214,5 @@ namespace DACNNEWMAP.PlayerControl
                 staminaBar.fillAmount = currentStamina / maxStamina;
             }
         }
-
     }
 }

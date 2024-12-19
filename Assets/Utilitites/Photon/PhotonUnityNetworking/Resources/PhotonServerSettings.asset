@@ -63,6 +63,22 @@ MonoBehaviour:
   - TogglePauseMenu
   - ClosePauseMenuRPC
   - OpenEscMenuRPC
+  - HandleMasterClientLeft
+  - RequestAnomalyDestruction
+  - NotifyAnomalyFound
+  - UpdateRecordingState
+  - RequestDestroyAnomaly
+  - DestroyAnomalyRPC
+  - ResetGlitchEffectRPC
+  - SyncAnomaly
+  - SpawnAnomaliesOnAllClients
+  - InstantiateAnomaly
+  - SpawnAnomalies
+  - SyncAnomaliesWithNewClient
+  - RequestAnomalySync
+  - CheckGameOver
+  - OnAnomalyDestroyed
+  - ShowEndGameUI
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

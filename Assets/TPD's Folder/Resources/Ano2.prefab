@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5035264246117551238}
   - component: {fileID: 6295621500307725612}
   - component: {fileID: 250303102717775643}
+  - component: {fileID: -5993302215537553312}
   m_Layer: 11
   m_Name: Ano2
   m_TagString: Anomaly
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.106, y: 0.152, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.8188475, z: 0.8188475}
+  m_LocalScale: {x: 1, y: 1.1697822, z: 1.1697822}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -130,3 +131,15 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-5993302215537553312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116707511594439797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21325d63fa6c9114a97e005c0f938408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
