@@ -14,7 +14,7 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private Transform Camera;
         [SerializeField] private float UpperLimit = -40f;
         [SerializeField] private float BottomLimit = 70f;
-        [SerializeField] private float MouseSensitivity = 15f;
+        [SerializeField] private float MouseSensitivity = 21.9f;
         [SerializeField, Range(10, 500)] private float JumpFactor = 260f;
         [SerializeField] private float Dis2Ground = 0.8f;
         [SerializeField] private LayerMask GroundCheck;
