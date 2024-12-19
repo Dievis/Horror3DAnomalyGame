@@ -15,6 +15,7 @@ public class SAnomalyInteraction : MonoBehaviour
     public AudioSource anomalySound;  // Âm thanh phát ra khi anomaly bị phá hủy
     private AnalogGlitch analogGlitch;  // Tham chiếu đến script AnalogGlitch (hiệu ứng glitch)
 
+    private SCameraUI cameraUI;  // Tham chiếu đến CameraUI để kiểm tra trạng thái quay video
 
     void Start()
     {
@@ -25,12 +26,20 @@ public class SAnomalyInteraction : MonoBehaviour
         {
             Debug.LogError("AnalogGlitch component is missing on the camera.");  // Nếu không tìm thấy, in lỗi
         }
+
+        // Lấy tham chiếu đến CameraUI
+        cameraUI = GetComponentInParent<SCameraUI>();
+
+        if (cameraUI == null)
+        {
+            Debug.LogError("CameraUI component is missing on the camera.");  // Nếu không tìm thấy, in lỗi
+        }
     }
 
     void Update()
     {
         // Kiểm tra xem người chơi có đang quay video không
-        if (!SGameManager.instance.isRecording)  // Sử dụng SGameManager để lấy trạng thái isRecording
+        if (!cameraUI.isRecording)
         {
             return;  // Nếu không quay video, không làm gì cả
         }

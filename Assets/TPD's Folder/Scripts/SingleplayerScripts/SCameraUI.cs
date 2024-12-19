@@ -1,7 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;  // Để sử dụng Coroutine
 
 public class SCameraUI : MonoBehaviour
 {
@@ -19,8 +18,6 @@ public class SCameraUI : MonoBehaviour
 
     private SGameManager gameManager; // Tham chiếu đến SGameManager
     private int batteryLevel = 3;     // Mức pin: 3 là đầy, 2 là một nửa, 1 là cần sạc, 0 là thua
-
-    private Coroutine blinkCoroutine; // Tham chiếu đến Coroutine nhấp nháy
 
     void Start()
     {
@@ -51,116 +48,125 @@ public class SCameraUI : MonoBehaviour
         // Kiểm tra nhấn phím F để bật/tắt panel và quay video
         if (Input.GetKeyDown(KeyCode.F))
         {
-            TogglePanel();  // Bật/ tắt panel hiển thị camera
+            TogglePanel();  // Mở hoặc đóng panel khi nhấn F
         }
-    }
 
-    // Cập nhật UI khi quay video
-    public void UpdateRecordingUI()
-    {
+        // Nếu đang quay
         if (isRecording)
         {
-            // Nếu đang quay, bật màu đỏ cho REC
+            // Làm cho hình tròn nhấp nháy
+            float alpha = Mathf.PingPong(Time.time * blinkSpeed, 1);
+            circleImage.color = new Color(1, 0, 0, alpha);  // Đổi độ mờ của hình tròn
             recText.text = "REC";
-            circleImage.color = Color.red;
-
-            // Bắt đầu nhấp nháy màu đỏ cho circleImage
-            StartBlinking();
         }
         else
         {
-            // Nếu không quay, ẩn REC và hình tròn
-            recText.text = "";
-            circleImage.color = Color.clear;
-
-            // Dừng nhấp nháy khi dừng quay video
-            StopBlinking();
+            // Ẩn hình tròn khi không quay
+            circleImage.color = new Color(1, 0, 0, 0);  // Ẩn hình tròn (alpha = 0)
+            recText.text = "";  // Ẩn chữ "REC"
         }
     }
 
-    // Hàm bắt đầu quay
-    public void StartRecording()
-    {
-        isRecording = true;
-        gameManager.isRecording = true;  // Thông báo cho SGameManager biết rằng video đang quay
-        Debug.Log("Recording Started");
-        UpdateRecordingUI();
-    }
-
-    // Hàm dừng quay
-    public void StopRecording()
-    {
-        isRecording = false;
-        gameManager.isRecording = false;  // Thông báo cho SGameManager biết rằng video đã dừng
-        Debug.Log("Recording Stopped");
-        UpdateRecordingUI();
-    }
-
-    // Cập nhật mức độ pin
-    private void UpdateBatteryLevel()
-    {
-        if (batteryLevel == 3)
-        {
-            BatteryImg.sprite = FullBattery;
-        }
-        else if (batteryLevel == 2)
-        {
-            BatteryImg.sprite = HalfBattery;
-        }
-        else if (batteryLevel == 1)
-        {
-            BatteryImg.sprite = ChargeBattery;
-        }
-        else
-        {
-            Debug.LogWarning("Battery is dead!");
-            StopRecording();  // Nếu pin hết, dừng quay video
-        }
-    }
-
-    // Toggle panel hiển thị camera
     public void TogglePanel()
     {
         if (cameraUIPanel != null)
         {
-            bool isActive = cameraUIPanel.activeSelf;
-            cameraUIPanel.SetActive(!isActive);  // Nếu panel đang hiển thị thì ẩn đi, ngược lại thì hiện lên
+            bool isPanelActive = cameraUIPanel.activeSelf;
+            cameraUIPanel.SetActive(!isPanelActive);
 
-            // Kiểm tra trạng thái của panel và thay đổi trạng thái quay video
-            if (cameraUIPanel.activeSelf)  // Panel được bật lên (hiển thị)
+            Debug.Log("Camera UI Panel Active: " + cameraUIPanel.activeSelf);
+
+            // Nếu mở panel, bắt đầu ghi hình
+            if (!isPanelActive)
             {
-                StartRecording();  // Bắt đầu quay video khi panel hiển thị
+                StartRecording();
             }
-            else  // Panel bị tắt (ẩn đi)
+            else
             {
-                StopRecording();  // Dừng quay video khi panel ẩn đi
+                StopRecording();
             }
+
+            // Đảm bảo UI được cập nhật ngay lập tức
+            UpdateRecordingUI();
         }
-    }
-
-    // Coroutine để tạo hiệu ứng nhấp nháy màu đỏ cho circleImage
-    private IEnumerator BlinkCircle()
-    {
-        while (isRecording)
+        else
         {
-            circleImage.color = Color.red;  // Màu đỏ
-            yield return new WaitForSeconds(blinkSpeed);
-            circleImage.color = new Color(1f, 0f, 0f, 0f); // Màu trong suốt
-            yield return new WaitForSeconds(blinkSpeed);
+            Debug.LogError("cameraUIPanel is not assigned in the Inspector.");
         }
     }
 
-    // Bắt đầu nhấp nháy màu đỏ cho circleImage
-    private void StartBlinking()
+    public void StartRecording()
     {
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);  // Dừng coroutine nếu đang chạy
-        blinkCoroutine = StartCoroutine(BlinkCircle());
+        isRecording = true;
+        Debug.Log("Recording Started");
+        UpdateRecordingUI();
     }
 
-    // Dừng nhấp nháy
-    private void StopBlinking()
+    public void StopRecording()
     {
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);  // Dừng coroutine khi không cần nhấp nháy nữa
-        circleImage.color = Color.clear;  // Đảm bảo circleImage ẩn đi khi không quay
+        isRecording = false;
+        Debug.Log("Recording Stopped");
+        UpdateRecordingUI();
+    }
+
+    private void UpdateRecordingUI()
+    {
+        if (isRecording)
+        {
+            recText.text = "REC";
+            float alpha = Mathf.PingPong(Time.time * blinkSpeed, 1);
+            circleImage.color = new Color(1, 0, 0, alpha);
+            Debug.Log("UI Updated: Recording");
+        }
+        else
+        {
+            recText.text = "";
+            circleImage.color = new Color(1, 0, 0, 0);
+            Debug.Log("UI Updated: Not Recording");
+        }
+    }
+
+    private void UpdateBatteryLevel()
+    {
+        if (gameManager == null) return;
+
+        // Lấy tỷ lệ thời gian còn lại từ SGameManager
+        float timeFraction = gameManager.timer / gameManager.gameDuration;
+
+        // Xác định mức pin dựa trên tỷ lệ thời gian
+        if (timeFraction <= 0f)
+        {
+            batteryLevel = 0; // Hết pin
+        }
+        else if (timeFraction <= 0.33f)
+        {
+            batteryLevel = 1; // Cần sạc
+        }
+        else if (timeFraction <= 0.67f)
+        {
+            batteryLevel = 2; // Pin nửa
+        }
+        else
+        {
+            batteryLevel = 3; // Pin đầy
+        }
+
+        // Cập nhật hình ảnh pin
+        switch (batteryLevel)
+        {
+            case 3:
+                BatteryImg.sprite = FullBattery;
+                break;
+            case 2:
+                BatteryImg.sprite = HalfBattery;
+                break;
+            case 1:
+                BatteryImg.sprite = ChargeBattery;
+                break;
+            case 0:
+                Debug.Log("Game Over - Out of Battery!");
+                gameManager.EndGame(false);
+                break;
+        }
     }
 }
