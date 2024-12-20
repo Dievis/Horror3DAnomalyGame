@@ -198,7 +198,7 @@ public class SGameManager : MonoBehaviour
     {
         Debug.Log("Replay the game.");
         ResetGame();
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene); // Load lại cảnh game hiện tại
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SScene); // Load lại cảnh game hiện tại
     }
 
     private void UnlockCursor()
