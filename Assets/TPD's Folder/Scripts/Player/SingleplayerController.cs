@@ -1,8 +1,6 @@
-﻿//SingleplayerController
-
-using DACNNEWMAP.Manager;
+﻿using DACNNEWMAP.Manager;
 using UnityEngine;
-using UnityEngine.UI; // Thêm UI namespace
+using UnityEngine.UI;
 
 namespace DACNNEWMAP.PlayerControl
 {
@@ -15,10 +13,6 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float UpperLimit = -40f;
         [SerializeField] private float BottomLimit = 70f;
         [SerializeField] private float MouseSensitivity = 15f;
-        [SerializeField, Range(10, 500)] private float JumpFactor = 260f;
-        [SerializeField] private float Dis2Ground = 0.8f;
-        [SerializeField] private LayerMask GroundCheck;
-        [SerializeField] private float AirResistance = 0.8f;
         [SerializeField] public float _walkSpeed = 2f;
         [SerializeField] public float _runSpeed = 6f;
 
@@ -37,16 +31,9 @@ namespace DACNNEWMAP.PlayerControl
         private bool _hasAnimator;
         private int _xVelHash;
         private int _yVelHash;
-        private int _jumpHash;
-        private int _groundHash;
-        private int _fallingHash;
-        private int _zVelHash;
-        private int _crouchHash;
         private float _xRotation;
 
-
         private Vector2 _currentVelocity;
-
         private float currentStamina;
         private float staminaRegenTimer;
 
@@ -58,11 +45,6 @@ namespace DACNNEWMAP.PlayerControl
 
             _xVelHash = Animator.StringToHash("X_Velocity");
             _yVelHash = Animator.StringToHash("Y_Velocity");
-            _zVelHash = Animator.StringToHash("Z_Velocity");
-            _jumpHash = Animator.StringToHash("Jump");
-            _groundHash = Animator.StringToHash("Grounded");
-            _fallingHash = Animator.StringToHash("Falling");
-            _crouchHash = Animator.StringToHash("Crouch");
 
             currentStamina = maxStamina;
 
@@ -77,8 +59,6 @@ namespace DACNNEWMAP.PlayerControl
         {
             SampleGround();
             Move();
-            HandleJump();
-            HandleCrouch();
         }
 
         private void LateUpdate()
@@ -113,7 +93,7 @@ namespace DACNNEWMAP.PlayerControl
                 {
                     currentStamina += staminaRegenRate * Time.deltaTime;
                     currentStamina = Mathf.Min(currentStamina, maxStamina);
-                }               
+                }
             }
 
             // Khi hết stamina, không thể chạy nữa
@@ -124,6 +104,8 @@ namespace DACNNEWMAP.PlayerControl
 
             UpdateStaminaUI();  // Cập nhật UI stamina
 
+            // Tính toán độ dốc và điều chỉnh lực di chuyển
+            Vector3 moveDirection = transform.TransformDirection(new Vector3(_inputManager.Move.x, 0, _inputManager.Move.y));
             _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _inputManager.Move.x * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
             _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _inputManager.Move.y * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
 
@@ -137,7 +119,6 @@ namespace DACNNEWMAP.PlayerControl
             _animator.SetFloat(_yVelHash, _currentVelocity.y);
             _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);  // Điều khiển animation chạy
         }
-
 
         private void CamMovements()
         {
@@ -154,28 +135,12 @@ namespace DACNNEWMAP.PlayerControl
             _playerRigidbody.MoveRotation(_playerRigidbody.rotation * Quaternion.Euler(0, Mouse_X * MouseSensitivity * Time.smoothDeltaTime, 0));
         }
 
-        private void HandleCrouch() => _animator.SetBool(_crouchHash, _inputManager.Crouch);
-
-        private void HandleJump()
-        {
-            if (!_hasAnimator || !_inputManager.Jump || !_grounded) return;
-
-            _animator.SetTrigger(_jumpHash);
-        }
-
-        public void JumpAddForce()
-        {
-            _playerRigidbody.AddForce(-_playerRigidbody.velocity.y * Vector3.up, ForceMode.VelocityChange);
-            _playerRigidbody.AddForce(Vector3.up * JumpFactor, ForceMode.Impulse);
-            _animator.ResetTrigger(_jumpHash);
-        }
-
         private void SampleGround()
         {
             if (!_hasAnimator) return;
 
             RaycastHit hitInfo;
-            if (Physics.Raycast(_playerRigidbody.worldCenterOfMass, Vector3.down, out hitInfo, Dis2Ground + 0.1f, GroundCheck))
+            if (Physics.Raycast(_playerRigidbody.worldCenterOfMass, Vector3.down, out hitInfo, 1f))
             {
                 _grounded = true;
                 SetAnimationGrounding();
@@ -183,14 +148,14 @@ namespace DACNNEWMAP.PlayerControl
             }
 
             _grounded = false;
-            _animator.SetFloat(_zVelHash, _playerRigidbody.velocity.y);
+            _animator.SetFloat(_yVelHash, _playerRigidbody.velocity.y);
             SetAnimationGrounding();
         }
 
         private void SetAnimationGrounding()
         {
-            _animator.SetBool(_fallingHash, !_grounded);
-            _animator.SetBool(_groundHash, _grounded);
+            _animator.SetBool("Falling", !_grounded);
+            _animator.SetBool("Grounded", _grounded);
         }
 
         private void UpdateStaminaUI()
@@ -200,6 +165,5 @@ namespace DACNNEWMAP.PlayerControl
                 staminaBar.fillAmount = currentStamina / maxStamina;
             }
         }
-
     }
 }

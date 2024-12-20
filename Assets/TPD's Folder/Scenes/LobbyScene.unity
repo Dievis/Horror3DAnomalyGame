@@ -2743,7 +2743,6 @@ MonoBehaviour:
   roomName: {fileID: 28179314}
   roomItemPrefab: {fileID: 51931570904862210, guid: 917d7014487488e45932f91221ae8b6e, type: 3}
   contentObject: {fileID: 1772983541}
-  timeBetweenUpdates: 1.5
   playerItemsList: []
   playerItemPrefab: {fileID: 6886389743249630869, guid: bed7f76dc07a0a34e92bcac646432ba4, type: 3}
   playerItemParent: {fileID: 612940932}
@@ -4615,7 +4614,6 @@ GameObject:
   - component: {fileID: 1538293944}
   - component: {fileID: 1538293943}
   - component: {fileID: 1538293942}
-  - component: {fileID: 1538293945}
   m_Layer: 5
   m_Name: PlayBtn
   m_TagString: Untagged
@@ -4795,28 +4793,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538293940}
   m_CullTransparentMesh: 1
---- !u!114 &1538293945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1538293940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &1541432408
 GameObject:
   m_ObjectHideFlags: 0
