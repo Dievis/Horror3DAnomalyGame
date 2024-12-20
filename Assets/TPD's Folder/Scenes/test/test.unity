@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 1870199}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -204,15 +204,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 488259485}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &1870200
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -780,7 +781,7 @@ GameObject:
   - component: {fileID: 34236799}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -814,15 +815,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 206602248}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &34236800
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3160,7 +3162,7 @@ GameObject:
   - component: {fileID: 175779233}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3194,15 +3196,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 1211849181}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &175779234
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3448,11 +3451,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -4107,7 +4110,7 @@ GameObject:
   - component: {fileID: 237376460}
   m_Layer: 0
   m_Name: Hiding place (4)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4682,11 +4685,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -4930,7 +4933,7 @@ GameObject:
   - component: {fileID: 286774947}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4964,15 +4967,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 1256497473}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &286774948
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6049,7 +6053,7 @@ GameObject:
   - component: {fileID: 352629424}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6083,15 +6087,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 1142549955}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &352629425
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6731,7 +6736,7 @@ GameObject:
   - component: {fileID: 405228110}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6765,15 +6770,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 856100132}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &405228111
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7148,7 +7154,7 @@ GameObject:
   - component: {fileID: 423411739}
   m_Layer: 0
   m_Name: Hiding place (2)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7302,7 +7308,7 @@ GameObject:
   - component: {fileID: 438236151}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7336,15 +7342,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 280081117}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &438236152
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8283,11 +8290,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -8959,11 +8966,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -9418,6 +9425,11 @@ Transform:
   - {fileID: 1706906324}
   m_Father: {fileID: 32017841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &539875463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8980059617455018723, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &541705181
 GameObject:
   m_ObjectHideFlags: 0
@@ -10678,7 +10690,7 @@ GameObject:
   - component: {fileID: 608445857}
   m_Layer: 0
   m_Name: Hiding place
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10893,7 +10905,7 @@ GameObject:
   - component: {fileID: 638966704}
   m_Layer: 0
   m_Name: Hiding place (5)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11019,11 +11031,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -11642,6 +11654,7 @@ MonoBehaviour:
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
+  raycastLength: 3
   rb: {fileID: 6182834625807514710}
   playerCamera: {fileID: 8069825327327470289}
   moDel: {fileID: 5268679185289397215}
@@ -13338,7 +13351,7 @@ GameObject:
   - component: {fileID: 785230573}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13372,15 +13385,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 1524661747198277871}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &785230574
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14092,7 +14106,7 @@ GameObject:
   - component: {fileID: 817096101}
   m_Layer: 0
   m_Name: Hiding place (9)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14734,11 +14748,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -15623,6 +15637,26 @@ Transform:
   - {fileID: 15540756}
   m_Father: {fileID: 1233502968}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &912672707 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6016262783812481811, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &912672716 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 510177553053409303, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &912672717 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 300593017444218150, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &912672719 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &913674818
 GameObject:
   m_ObjectHideFlags: 0
@@ -15750,6 +15784,11 @@ Transform:
   - {fileID: 1155189670}
   m_Father: {fileID: 2106048878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &935622581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7221161231397405996, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &937782181
 GameObject:
   m_ObjectHideFlags: 0
@@ -16631,7 +16670,7 @@ GameObject:
   - component: {fileID: 1009945631}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16665,15 +16704,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 526311371}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &1009945632
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18689,11 +18729,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -19290,7 +19330,7 @@ GameObject:
   - component: {fileID: 1202045458}
   m_Layer: 0
   m_Name: "N\u01A1i tr\u1ED1n (1)"
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19324,15 +19364,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
-  normalPlayer: {fileID: 1524661747371142161}
+  normalPlayer: {fileID: 912672707}
   hidingPlayer: {fileID: 650385382}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
-  moDel: {fileID: 5268679185289397215}
-  playerCapsule: {fileID: 240961146778413472}
+  raycastLength: 3
+  rb: {fileID: 912672717}
+  playerCamera: {fileID: 539875463}
+  moDel: {fileID: 935622581}
+  playerCapsule: {fileID: 912672716}
 --- !u!54 &1202045459
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19679,11 +19720,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -20508,6 +20549,71 @@ Transform:
   - {fileID: 911686244}
   m_Father: {fileID: 904959814}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1240921024
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 510177553053409303, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_ProvidesContacts
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.7940774
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.731
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.6649914
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2881042275293262352, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016262783812481811, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_Name
+      value: Singleplayer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6129108757934336243, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: MouseSensitivity
+      value: 15
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
 --- !u!1 &1244548013
 GameObject:
   m_ObjectHideFlags: 0
@@ -20791,11 +20897,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -21666,7 +21772,7 @@ GameObject:
   - component: {fileID: 1296484337}
   m_Layer: 0
   m_Name: Hiding place (3)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21753,7 +21859,7 @@ GameObject:
   - component: {fileID: 1297802801}
   m_Layer: 0
   m_Name: Hiding place (6)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23723,7 +23829,7 @@ GameObject:
   - component: {fileID: 1466894276}
   m_Layer: 0
   m_Name: Hiding place (1)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29239,7 +29345,7 @@ GameObject:
   - component: {fileID: 1916928179}
   m_Layer: 0
   m_Name: Hiding place (7)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32493,7 +32599,7 @@ GameObject:
   - component: {fileID: 2100963929}
   m_Layer: 0
   m_Name: Hiding place (8)
-  m_TagString: Untagged
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36122,11 +36228,11 @@ GameObject:
   - component: {fileID: 7665227642269681115}
   m_Layer: 0
   m_Name: Singleplayer
-  m_TagString: Player
+  m_TagString: HidingPlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &1546437498514621524
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -41008,6 +41114,8 @@ MonoBehaviour:
   stopHideText: {fileID: 410559408}
   deathPanel: {fileID: 554844296}
   cameRa: {fileID: 2138866128}
+  deathAudio: {fileID: 0}
+  walkingAudio: {fileID: 0}
 --- !u!1 &4421149627253577890
 GameObject:
   m_ObjectHideFlags: 0
@@ -43454,13 +43562,15 @@ MonoBehaviour:
   jumpscareTime: 2
   walking: 0
   chasing: 0
-  player: {fileID: 2189733943050155691}
+  player: {fileID: 912672719}
   rayCastOffset: {x: 0, y: 0, z: 0}
   aiDistance: 0
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   deathPanel: {fileID: 554844296}
   cameRa: {fileID: 2138866128}
+  deathAudio: {fileID: 0}
+  walkingAudio: {fileID: 0}
 --- !u!195 &5856084630212908141
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -48717,10 +48827,10 @@ MonoBehaviour:
   BottomLimit: 70
   MouseSensitivity: 17
   JumpFactor: 260
-  Dis2Ground: 0.9
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 4
   _runSpeed: 12
@@ -48748,11 +48858,11 @@ MonoBehaviour:
   UpperLimit: -40
   BottomLimit: 70
   MouseSensitivity: 15
-  JumpFactor: 10
-  Dis2Ground: 0.9
+  JumpFactor: 260
+  Dis2Ground: 0.8
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 0
   AirResistance: 0.8
   _walkSpeed: 0
   _runSpeed: 0
@@ -49480,3 +49590,4 @@ SceneRoots:
   - {fileID: 2100963930}
   - {fileID: 817096102}
   - {fileID: 937782182}
+  - {fileID: 1240921024}
