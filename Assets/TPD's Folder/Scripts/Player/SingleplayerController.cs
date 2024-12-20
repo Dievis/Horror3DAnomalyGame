@@ -1,6 +1,8 @@
-﻿using DACNNEWMAP.Manager;
+﻿// SingleplayerController
+
+using DACNNEWMAP.Manager;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // Thêm UI namespace
 
 namespace DACNNEWMAP.PlayerControl
 {
@@ -13,8 +15,12 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float UpperLimit = -40f;
         [SerializeField] private float BottomLimit = 70f;
         [SerializeField] private float MouseSensitivity = 15f;
-        [SerializeField] private float _walkSpeed = 4f;
-        [SerializeField] private float _runSpeed = 12f;
+        [SerializeField, Range(10, 500)] private float JumpFactor = 260f;
+        [SerializeField] private float Dis2Ground = 0.8f;
+        [SerializeField] private LayerMask GroundCheck;
+        [SerializeField] private float AirResistance = 0.8f;
+        [SerializeField] public float _walkSpeed = 2f;
+        [SerializeField] public float _runSpeed = 6f;
 
         [Header("Stamina Settings")]
         [SerializeField] private float maxStamina = 100f;
@@ -31,9 +37,15 @@ namespace DACNNEWMAP.PlayerControl
         private bool _hasAnimator;
         private int _xVelHash;
         private int _yVelHash;
+        private int _jumpHash;
+        private int _groundHash;
+        private int _fallingHash;
+        private int _zVelHash;
+        private int _crouchHash;
         private float _xRotation;
 
         private Vector2 _currentVelocity;
+
         private float currentStamina;
         private float staminaRegenTimer;
 
@@ -45,6 +57,11 @@ namespace DACNNEWMAP.PlayerControl
 
             _xVelHash = Animator.StringToHash("X_Velocity");
             _yVelHash = Animator.StringToHash("Y_Velocity");
+            _zVelHash = Animator.StringToHash("Z_Velocity");
+            _jumpHash = Animator.StringToHash("Jump");
+            _groundHash = Animator.StringToHash("Grounded");
+            _fallingHash = Animator.StringToHash("Falling");
+            _crouchHash = Animator.StringToHash("Crouch");
 
             currentStamina = maxStamina;
 
@@ -52,15 +69,15 @@ namespace DACNNEWMAP.PlayerControl
             playerHUD.SetActive(true);
             Cursor.lockState = CursorLockMode.Locked;
 
-            _playerRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
             UpdateStaminaUI();
         }
 
         private void FixedUpdate()
         {
-            LimitRigidbodySpeed();
             SampleGround();
             Move();
+            HandleJump();
+            HandleCrouch();
         }
 
         private void LateUpdate()
@@ -78,17 +95,18 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (!_hasAnimator) return;
 
-            float targetSpeed = _walkSpeed;
+            float targetSpeed = _walkSpeed;  // Mặc định là tốc độ đi bộ
 
-            if (_inputManager.Run && currentStamina > 0)
+            if (_inputManager.Run && currentStamina > 0) // Nếu còn stamina và đang chạy
             {
-                targetSpeed = _runSpeed;
-                currentStamina -= staminaDrainRate * Time.deltaTime;
+                targetSpeed = _runSpeed; // Chạy với tốc độ run
+                currentStamina -= staminaDrainRate * Time.deltaTime;  // Giảm stamina khi chạy
                 currentStamina = Mathf.Max(currentStamina, 0);
-                staminaRegenTimer = 0f;
+                staminaRegenTimer = 0f; // Reset timer regen stamina
             }
-            else if (!_inputManager.Run && currentStamina < maxStamina)
+            else if (!_inputManager.Run && currentStamina < maxStamina) // Nếu không chạy và stamina chưa đầy
             {
+                // Hồi phục stamina khi không chạy
                 staminaRegenTimer += Time.deltaTime;
                 if (staminaRegenTimer >= staminaRegenDelay)
                 {
@@ -97,35 +115,42 @@ namespace DACNNEWMAP.PlayerControl
                 }
             }
 
+            // Khi hết stamina, không thể chạy nữa
             if (currentStamina <= 0)
             {
-                targetSpeed = _walkSpeed;
+                targetSpeed = _walkSpeed;  // Giới hạn tốc độ di chuyển
             }
 
-            UpdateStaminaUI();
+            UpdateStaminaUI();  // Cập nhật UI stamina
 
+            // Tính toán độ dốc và điều chỉnh lực di chuyển
             Vector3 moveDirection = transform.TransformDirection(new Vector3(_inputManager.Move.x, 0, _inputManager.Move.y));
+            RaycastHit hitInfo;
+            if (Physics.Raycast(transform.position, Vector3.down, out hitInfo, 1f))
+            {
+                Vector3 surfaceNormal = hitInfo.normal;
+                Vector3 flatSurfaceNormal = new Vector3(surfaceNormal.x, 0, surfaceNormal.z).normalized;
+                float angle = Vector3.Angle(Vector3.up, flatSurfaceNormal);
+
+                // Điều chỉnh tốc độ và lực dựa trên độ nghiêng
+                if (angle > 20f) // Nếu độ dốc quá lớn, giảm tốc độ di chuyển
+                {
+                    targetSpeed *= 0.5f; // giảm tốc độ
+                }
+            }
+
             _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _inputManager.Move.x * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
             _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _inputManager.Move.y * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
 
             var xVelDifference = _currentVelocity.x - _playerRigidbody.velocity.x;
             var zVelDifference = _currentVelocity.y - _playerRigidbody.velocity.z;
 
-            Vector3 force = transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference));
-            force = Vector3.ClampMagnitude(force, targetSpeed);
+            _playerRigidbody.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
 
-            if (_grounded)
-            {
-                _playerRigidbody.AddForce(force, ForceMode.VelocityChange);
-            }
-            else
-            {
-                _playerRigidbody.AddForce(force * 0.3f, ForceMode.VelocityChange);
-            }
-
+            // Cập nhật animation "run" và "walk" dựa vào tốc độ
             _animator.SetFloat(_xVelHash, _currentVelocity.x);
             _animator.SetFloat(_yVelHash, _currentVelocity.y);
-            _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);
+            _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);  // Điều khiển animation chạy
         }
 
         private void CamMovements()
@@ -143,41 +168,43 @@ namespace DACNNEWMAP.PlayerControl
             _playerRigidbody.MoveRotation(_playerRigidbody.rotation * Quaternion.Euler(0, Mouse_X * MouseSensitivity * Time.smoothDeltaTime, 0));
         }
 
+        private void HandleCrouch() => _animator.SetBool(_crouchHash, _inputManager.Crouch);
+
+        private void HandleJump()
+        {
+            if (!_hasAnimator || !_inputManager.Jump || !_grounded) return;
+
+            _animator.SetTrigger(_jumpHash);
+        }
+
+        public void JumpAddForce()
+        {
+            _playerRigidbody.AddForce(-_playerRigidbody.velocity.y * Vector3.up, ForceMode.VelocityChange);
+            _playerRigidbody.AddForce(Vector3.up * JumpFactor, ForceMode.Impulse);
+            _animator.ResetTrigger(_jumpHash);
+        }
+
         private void SampleGround()
         {
             if (!_hasAnimator) return;
 
-            float raycastLength = 1.2f;
-            float sphereRadius = 0.3f;
-            Vector3 rayOrigin = _playerRigidbody.position + Vector3.up * 0.1f;
-
-            // Sử dụng Raycast để kiểm tra mặt đất
-            if (Physics.SphereCast(rayOrigin, sphereRadius, Vector3.down, out RaycastHit hitInfo, raycastLength))
+            RaycastHit hitInfo;
+            if (Physics.Raycast(_playerRigidbody.worldCenterOfMass, Vector3.down, out hitInfo, Dis2Ground + 0.1f, GroundCheck))
             {
                 _grounded = true;
-
-                // Đảm bảo không áp lực bay theo đường chéo trên cầu thang
-                if (Vector3.Angle(hitInfo.normal, Vector3.up) <= 45f) // Kiểm tra góc nghiêng <= 45 độ
-                {
-                    // Tính toán lực di chuyển trên mặt phẳng
-                    Vector3 adjustedForce = Vector3.ProjectOnPlane(_playerRigidbody.velocity, hitInfo.normal);
-                    _playerRigidbody.velocity = adjustedForce;
-                }
-
                 SetAnimationGrounding();
                 return;
             }
 
             _grounded = false;
-            _animator.SetFloat(_yVelHash, _playerRigidbody.velocity.y);
+            _animator.SetFloat(_zVelHash, _playerRigidbody.velocity.y);
             SetAnimationGrounding();
         }
 
-
         private void SetAnimationGrounding()
         {
-            _animator.SetBool("Falling", !_grounded);
-            _animator.SetBool("Grounded", _grounded);
+            _animator.SetBool(_fallingHash, !_grounded);
+            _animator.SetBool(_groundHash, _grounded);
         }
 
         private void UpdateStaminaUI()
@@ -185,17 +212,6 @@ namespace DACNNEWMAP.PlayerControl
             if (staminaBar != null)
             {
                 staminaBar.fillAmount = currentStamina / maxStamina;
-            }
-        }
-
-        private void LimitRigidbodySpeed()
-        {
-            Vector3 velocity = _playerRigidbody.velocity;
-            float maxSpeed = _runSpeed * 1.5f;
-
-            if (velocity.magnitude > maxSpeed)
-            {
-                _playerRigidbody.velocity = velocity.normalized * maxSpeed;
             }
         }
     }

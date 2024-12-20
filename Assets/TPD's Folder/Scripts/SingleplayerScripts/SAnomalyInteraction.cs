@@ -15,11 +15,14 @@ public class SAnomalyInteraction : MonoBehaviour
     public AudioSource anomalySound;  // Âm thanh phát ra khi anomaly bị phá hủy
     private AnalogGlitch analogGlitch;  // Tham chiếu đến script AnalogGlitch (hiệu ứng glitch)
 
+    private SCameraUI SCameraUI;
 
     void Start()
     {
         // Lấy tham chiếu đến AnalogGlitch trên camera
         analogGlitch = playerCamera.GetComponent<AnalogGlitch>();
+
+        SCameraUI = FindObjectOfType<SCameraUI>();
 
         if (analogGlitch == null)
         {
@@ -30,7 +33,7 @@ public class SAnomalyInteraction : MonoBehaviour
     void Update()
     {
         // Kiểm tra xem người chơi có đang quay video không
-        if (!SGameManager.instance.isRecording)  // Sử dụng SGameManager để lấy trạng thái isRecording
+        if (!SCameraUI.isRecording)
         {
             return;  // Nếu không quay video, không làm gì cả
         }

@@ -22,6 +22,7 @@ public class EnemyAI : MonoBehaviour
     public GameObject deathPanel;
     public GameObject cameRa;
     public AudioSource deathAudio; // AudioSource để phát âm thanh
+    public AudioSource walkingAudio; 
 
 
     void Start()
