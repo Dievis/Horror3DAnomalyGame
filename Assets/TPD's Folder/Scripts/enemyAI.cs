@@ -21,6 +21,8 @@ public class EnemyAI : MonoBehaviour
     public GameObject hideText, stopHideText;
     public GameObject deathPanel;
     public GameObject cameRa;
+    public AudioSource deathAudio; // AudioSource để phát âm thanh
+    public AudioSource walkingAudio; 
 
 
     void Start()
@@ -108,6 +110,13 @@ public class EnemyAI : MonoBehaviour
     IEnumerator deathRoutine()
     {
         cameRa.SetActive(true);
+
+        // Phát âm thanh khi chết
+        if (deathAudio != null)
+        {
+            deathAudio.Play();
+        }
+
         yield return new WaitForSeconds(jumpscareTime);
         deathPanel.SetActive(true);
         UnlockCursor();

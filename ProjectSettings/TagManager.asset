@@ -17,6 +17,9 @@ TagManager:
   - Bullet
   - Anomaly
   - 'Anomaly '
+  - CameraReach
+  - RightHand
+  - HidingPlace
   layers:
   - Default
   - TransparentFX

@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;  // Để sử dụng Coroutine
+using System.Collections;
 
 public class SCameraUI : MonoBehaviour
 {
@@ -17,21 +17,12 @@ public class SCameraUI : MonoBehaviour
     public Sprite HalfBattery;        // Sprite cho pin một nửa
     public Sprite ChargeBattery;      // Sprite cho pin cần sạc
 
-    private SGameManager gameManager; // Tham chiếu đến SGameManager
-    private int batteryLevel = 3;     // Mức pin: 3 là đầy, 2 là một nửa, 1 là cần sạc, 0 là thua
-
+    public int batteryLevel = 3;     // Mức pin: 3 là đầy, 2 là một nửa, 1 là cần sạc, 0 là thua
     private Coroutine blinkCoroutine; // Tham chiếu đến Coroutine nhấp nháy
+    public float timePassed = 0f;    // Biến đếm thời gian trôi qua mỗi frame
 
     void Start()
     {
-        // Lấy tham chiếu đến SGameManager
-        gameManager = SGameManager.instance;
-
-        if (gameManager == null)
-        {
-            Debug.LogError("SGameManager instance is missing in the scene.");
-        }
-
         // Đảm bảo panel được ẩn khi bắt đầu
         if (cameraUIPanel != null)
         {
@@ -45,7 +36,7 @@ public class SCameraUI : MonoBehaviour
 
     void Update()
     {
-        // Cập nhật mức pin dựa trên thời gian từ SGameManager
+        // Cập nhật mức pin và giảm nếu đang quay video
         UpdateBatteryLevel();
 
         // Kiểm tra nhấn phím F để bật/tắt panel và quay video
@@ -82,7 +73,6 @@ public class SCameraUI : MonoBehaviour
     public void StartRecording()
     {
         isRecording = true;
-        gameManager.isRecording = true;  // Thông báo cho SGameManager biết rằng video đang quay
         Debug.Log("Recording Started");
         UpdateRecordingUI();
     }
@@ -91,13 +81,46 @@ public class SCameraUI : MonoBehaviour
     public void StopRecording()
     {
         isRecording = false;
-        gameManager.isRecording = false;  // Thông báo cho SGameManager biết rằng video đã dừng
         Debug.Log("Recording Stopped");
         UpdateRecordingUI();
     }
 
-    // Cập nhật mức độ pin
+    // Cập nhật mức độ pin và giảm nếu đang quay
     private void UpdateBatteryLevel()
+    {
+        if (isRecording)
+        {
+            // Mỗi 60 giây, giảm một cấp pin
+            timePassed += Time.deltaTime;  // Tăng thời gian đã trôi qua mỗi frame
+
+            if (timePassed >= 30f)  // Mỗi 30 giây
+            {
+                timePassed = 0f;  // Reset bộ đếm thời gian
+                DecreaseBatteryLevel();  // Giảm pin một mức
+            }
+        }
+
+        UpdateBatteryUI();
+    }
+
+    // Giảm pin một cấp
+    private void DecreaseBatteryLevel()
+    {
+        if (batteryLevel > 0)
+        {
+            batteryLevel--;
+            Debug.Log("Battery Level: " + batteryLevel);
+        }
+
+        // Nếu pin hết, dừng quay video
+        if (batteryLevel == 0)
+        {
+            StopRecording();
+        }
+    }
+
+    // Cập nhật UI cho pin
+    public void UpdateBatteryUI()
     {
         if (batteryLevel == 3)
         {
@@ -114,7 +137,6 @@ public class SCameraUI : MonoBehaviour
         else
         {
             Debug.LogWarning("Battery is dead!");
-            StopRecording();  // Nếu pin hết, dừng quay video
         }
     }
 

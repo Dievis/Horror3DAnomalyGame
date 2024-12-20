@@ -4437,6 +4437,9 @@ MonoBehaviour:
   playerCamera: {fileID: 1667707801505286563}
   rayLength: 10
   highlightColor: {r: 0.48235297, g: 0.8078432, b: 0.9568628, a: 1}
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &592791992781920204
 MonoBehaviour:
   m_ObjectHideFlags: 0
