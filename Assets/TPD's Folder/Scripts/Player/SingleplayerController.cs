@@ -13,8 +13,8 @@ namespace DACNNEWMAP.PlayerControl
         [SerializeField] private float UpperLimit = -40f;
         [SerializeField] private float BottomLimit = 70f;
         [SerializeField] private float MouseSensitivity = 15f;
-        [SerializeField] public float _walkSpeed = 2f;
-        [SerializeField] public float _runSpeed = 6f;
+        [SerializeField] private float _walkSpeed = 4f;
+        [SerializeField] private float _runSpeed = 12f;
 
         [Header("Stamina Settings")]
         [SerializeField] private float maxStamina = 100f;
@@ -52,11 +52,13 @@ namespace DACNNEWMAP.PlayerControl
             playerHUD.SetActive(true);
             Cursor.lockState = CursorLockMode.Locked;
 
+            _playerRigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
             UpdateStaminaUI();
         }
 
         private void FixedUpdate()
         {
+            LimitRigidbodySpeed();
             SampleGround();
             Move();
         }
@@ -76,18 +78,17 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (!_hasAnimator) return;
 
-            float targetSpeed = _walkSpeed;  // Mặc định là tốc độ đi bộ
+            float targetSpeed = _walkSpeed;
 
-            if (_inputManager.Run && currentStamina > 0) // Nếu còn stamina và đang chạy
+            if (_inputManager.Run && currentStamina > 0)
             {
-                targetSpeed = _runSpeed; // Chạy với tốc độ run
-                currentStamina -= staminaDrainRate * Time.deltaTime;  // Giảm stamina khi chạy
+                targetSpeed = _runSpeed;
+                currentStamina -= staminaDrainRate * Time.deltaTime;
                 currentStamina = Mathf.Max(currentStamina, 0);
-                staminaRegenTimer = 0f; // Reset timer regen stamina
+                staminaRegenTimer = 0f;
             }
-            else if (!_inputManager.Run && currentStamina < maxStamina) // Nếu không chạy và stamina chưa đầy
+            else if (!_inputManager.Run && currentStamina < maxStamina)
             {
-                // Hồi phục stamina khi không chạy
                 staminaRegenTimer += Time.deltaTime;
                 if (staminaRegenTimer >= staminaRegenDelay)
                 {
@@ -96,15 +97,13 @@ namespace DACNNEWMAP.PlayerControl
                 }
             }
 
-            // Khi hết stamina, không thể chạy nữa
             if (currentStamina <= 0)
             {
-                targetSpeed = _walkSpeed;  // Giới hạn tốc độ di chuyển
+                targetSpeed = _walkSpeed;
             }
 
-            UpdateStaminaUI();  // Cập nhật UI stamina
+            UpdateStaminaUI();
 
-            // Tính toán độ dốc và điều chỉnh lực di chuyển
             Vector3 moveDirection = transform.TransformDirection(new Vector3(_inputManager.Move.x, 0, _inputManager.Move.y));
             _currentVelocity.x = Mathf.Lerp(_currentVelocity.x, _inputManager.Move.x * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
             _currentVelocity.y = Mathf.Lerp(_currentVelocity.y, _inputManager.Move.y * targetSpeed, AnimBlendSpeed * Time.fixedDeltaTime);
@@ -112,12 +111,21 @@ namespace DACNNEWMAP.PlayerControl
             var xVelDifference = _currentVelocity.x - _playerRigidbody.velocity.x;
             var zVelDifference = _currentVelocity.y - _playerRigidbody.velocity.z;
 
-            _playerRigidbody.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
+            Vector3 force = transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference));
+            force = Vector3.ClampMagnitude(force, targetSpeed);
 
-            // Cập nhật animation "run" và "walk" dựa vào tốc độ
+            if (_grounded)
+            {
+                _playerRigidbody.AddForce(force, ForceMode.VelocityChange);
+            }
+            else
+            {
+                _playerRigidbody.AddForce(force * 0.3f, ForceMode.VelocityChange);
+            }
+
             _animator.SetFloat(_xVelHash, _currentVelocity.x);
             _animator.SetFloat(_yVelHash, _currentVelocity.y);
-            _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);  // Điều khiển animation chạy
+            _animator.SetBool("IsRunning", _inputManager.Run && currentStamina > 0);
         }
 
         private void CamMovements()
@@ -139,10 +147,23 @@ namespace DACNNEWMAP.PlayerControl
         {
             if (!_hasAnimator) return;
 
-            RaycastHit hitInfo;
-            if (Physics.Raycast(_playerRigidbody.worldCenterOfMass, Vector3.down, out hitInfo, 1f))
+            float raycastLength = 1.2f;
+            float sphereRadius = 0.3f;
+            Vector3 rayOrigin = _playerRigidbody.position + Vector3.up * 0.1f;
+
+            // Sử dụng Raycast để kiểm tra mặt đất
+            if (Physics.SphereCast(rayOrigin, sphereRadius, Vector3.down, out RaycastHit hitInfo, raycastLength))
             {
                 _grounded = true;
+
+                // Đảm bảo không áp lực bay theo đường chéo trên cầu thang
+                if (Vector3.Angle(hitInfo.normal, Vector3.up) <= 45f) // Kiểm tra góc nghiêng <= 45 độ
+                {
+                    // Tính toán lực di chuyển trên mặt phẳng
+                    Vector3 adjustedForce = Vector3.ProjectOnPlane(_playerRigidbody.velocity, hitInfo.normal);
+                    _playerRigidbody.velocity = adjustedForce;
+                }
+
                 SetAnimationGrounding();
                 return;
             }
@@ -151,6 +172,7 @@ namespace DACNNEWMAP.PlayerControl
             _animator.SetFloat(_yVelHash, _playerRigidbody.velocity.y);
             SetAnimationGrounding();
         }
+
 
         private void SetAnimationGrounding()
         {
@@ -163,6 +185,17 @@ namespace DACNNEWMAP.PlayerControl
             if (staminaBar != null)
             {
                 staminaBar.fillAmount = currentStamina / maxStamina;
+            }
+        }
+
+        private void LimitRigidbodySpeed()
+        {
+            Vector3 velocity = _playerRigidbody.velocity;
+            float maxSpeed = _runSpeed * 1.5f;
+
+            if (velocity.magnitude > maxSpeed)
+            {
+                _playerRigidbody.velocity = velocity.normalized * maxSpeed;
             }
         }
     }

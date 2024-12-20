@@ -35,7 +35,7 @@ public class SAnomalyInteraction : MonoBehaviour
             return;  // Nếu không quay video, không làm gì cả
         }
 
-        // Tạo một raycast từ vị trí chuột của người chơi trên màn hình
+        // Tạo một raycast từ vị trí chuột của người chơi trên màn hìnhA
         RaycastHit hit;
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
 
