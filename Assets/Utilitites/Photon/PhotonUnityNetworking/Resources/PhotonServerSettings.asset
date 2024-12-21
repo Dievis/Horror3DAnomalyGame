@@ -79,6 +79,8 @@ MonoBehaviour:
   - CheckGameOver
   - OnAnomalyDestroyed
   - ShowEndGameUI
+  - RPC_DecreaseBatteryLevel
+  - RPC_UpdateRecordingState
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

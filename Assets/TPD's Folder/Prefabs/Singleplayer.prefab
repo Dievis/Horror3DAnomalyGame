@@ -2309,7 +2309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.6666667}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.3137255}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2608,6 +2608,7 @@ RectTransform:
   m_LocalScale: {x: 0.9182549, y: 0.9182549, z: 0.9182549}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4487446915802268365}
   - {fileID: 6785277423569115197}
   - {fileID: 65797843223902685}
   - {fileID: 812795991729439682}
@@ -3019,14 +3020,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.34509802, a: 1}
+  m_Color: {r: 0, g: 0.7207546, b: 0.24873099, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 66efb24ed46044ab8a039599cbc47d7b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 892e55af9a3d6d0448a51f69a6c1453b, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3068,7 +3069,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7510216151568856159}
-  - {fileID: 4487446915802268365}
   - {fileID: 1788601401990852726}
   - {fileID: 2856103283804038109}
   - {fileID: 7935058278016012926}
@@ -3367,12 +3367,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5298917194667245890}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.38998672, y: 0.38998672, z: 0.38998672}
+  m_LocalScale: {x: 1.1674248, y: 1.1674248, z: 1.1674248}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 823934853409719990}
+  m_Father: {fileID: 2856103283804038109}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3400,14 +3400,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.4188679, g: 0.4188679, b: 0.4188679, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8dfa9d9621d4b7e40a190f7a2342c0c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0800cc9d4da0323489f4d25c65194aa5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3921,6 +3921,7 @@ GameObject:
   - component: {fileID: 3522724454337961562}
   - component: {fileID: 6461281306118213588}
   - component: {fileID: 5114133536897884012}
+  - component: {fileID: 1866258699804923679}
   m_Layer: 6
   m_Name: Singleplayer
   m_TagString: Player
@@ -4011,7 +4012,7 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.28
@@ -4035,15 +4036,15 @@ MonoBehaviour:
   Camera: {fileID: 5313813272514519304}
   UpperLimit: -40
   BottomLimit: 70
-  MouseSensitivity: 10
+  MouseSensitivity: 15
   JumpFactor: 260
   Dis2Ground: 0.9
   GroundCheck:
     serializedVersion: 2
-    m_Bits: 525
+    m_Bits: 13
   AirResistance: 0.8
   _walkSpeed: 4
-  _runSpeed: 12
+  _runSpeed: 10
   maxStamina: 100
   staminaDrainRate: 15
   staminaRegenRate: 10
@@ -4065,7 +4066,6 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 848142970033197123}
   settingsPanelUI: {fileID: 3142746589625049365}
   StaminaBar: {fileID: 4545428295537556475}
-  CrossHair: {fileID: 5298917194667245890}
 --- !u!114 &3386304847622523277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4130,7 +4130,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 20
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -4226,6 +4226,8 @@ MonoBehaviour:
   FullBattery: {fileID: 21300000, guid: 692c00569b804d349b00445f08239980, type: 3}
   HalfBattery: {fileID: 21300000, guid: f02e31639847b0645ae4fbdf08aa5d88, type: 3}
   ChargeBattery: {fileID: 21300000, guid: 213a7b64eaee46e4b89efefe49d383de, type: 3}
+  batteryLevel: 3
+  timePassed: 0
 --- !u!114 &6461281306118213588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4259,6 +4261,21 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 2048
+--- !u!114 &1866258699804923679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6016262783812481811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a179a25d37aad2d4aa529620fbca1073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 2881042275293262352}
+  scanRadius: 50
+  SUIManager: {fileID: 0}
 --- !u!1 &6337504763132154587
 GameObject:
   m_ObjectHideFlags: 0
@@ -5934,6 +5951,7 @@ GameObject:
   - component: {fileID: 9133687928479174262}
   - component: {fileID: 7559863099054377179}
   - component: {fileID: 4326514979095122554}
+  - component: {fileID: 1140000218889158149}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Reach
@@ -5966,7 +5984,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -6032,3 +6050,24 @@ MonoBehaviour:
   _horizontalShake: 0
   _colorDrift: 0
   _shader: {fileID: 4800000, guid: da33272284ea24f208f36998880990be, type: 3}
+--- !u!65 &1140000218889158149
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8980059617455018723}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.12660086, y: 0.11473465, z: 0.8597412}
+  m_Center: {x: 0.0082708, y: -0.09466553, z: 0.619812}
