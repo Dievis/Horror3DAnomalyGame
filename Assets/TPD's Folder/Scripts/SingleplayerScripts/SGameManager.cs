@@ -8,7 +8,7 @@ public class SGameManager : MonoBehaviour
     [SerializeField] private int totalAnomalies;        // Tổng số anomalies trong game
     [SerializeField] private int anomaliesFound = 0;     // Số anomalies đã tìm thấy
     [SerializeField][Range(0f, 1f)] private float victoryThreshold = 0.8f; // Tỷ lệ chiến thắng (phần trăm anomalies cần tìm để thắng)
-    private bool gameEnded = false;                      // Trạng thái game (đã kết thúc hay chưa)
+    private bool gameEnded = false;   // Trạng thái game (đã kết thúc hay chưa)
 
     public float gameDuration = 60f;   // Thời gian của game
     public float timer;               // Bộ đếm thời gian
@@ -21,6 +21,11 @@ public class SGameManager : MonoBehaviour
 
     // Thêm biến theo dõi trạng thái quay video
     public bool isRecording = false;  // Biến này sẽ theo dõi xem video có đang quay hay không
+
+
+    public AudioSource GameOver;
+
+    public AudioSource Win;
 
     private void Awake()
     {
@@ -38,7 +43,7 @@ public class SGameManager : MonoBehaviour
         SUIManager = FindObjectOfType<SUserInterfaceManager>();  // Tìm và gán SUserInterfaceManager
         timer = gameDuration;  // Khởi tạo thời gian
 
-        // Hiển thị Panel Hướng dẫn khi game bắt đầu
+        // Chỉ hiển thị Panel Hướng dẫn nếu chưa từng hiển thị
         SUIManager.ShowTutorialPanel();
 
         // Reset UI ngay lập tức để tránh hiển thị sai thông tin
@@ -47,7 +52,7 @@ public class SGameManager : MonoBehaviour
         // Cập nhật UI ban đầu
         SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
         SUIManager.UpdateTimerUI(timer);
-
+                
         // Bắt đầu game và spawn anomalies
         StartCoroutine(WaitForAnomaliesToSpawn());
     }
@@ -131,11 +136,21 @@ public class SGameManager : MonoBehaviour
         float requiredAnomalies = totalAnomalies * victoryThreshold;  // Tính toán số anomalies cần thiết để thắng
         if (anomaliesFound >= requiredAnomalies)
         {
+            // Phát âm thanh khi thắng
+            if (Win != null)
+            {
+                Win.Play();
+            }
             UnlockCursor(); // Mở khóa trỏ chuột để tương tác khi chiến thắng
             EndGame(true);  // Chiến thắng nếu số anomalies cần tìm đã đủ
         }
         else if (timer <= 0f)
         {
+            // Phát âm thanh khi thua
+            if (GameOver != null)
+            {
+                GameOver.Play();
+            }
             UnlockCursor();  // Mở khóa trỏ chuột để tương tác khi thua
             EndGame(false);  // Thua nếu hết thời gian
         }
@@ -153,7 +168,7 @@ public class SGameManager : MonoBehaviour
     // Hiển thị UI kết thúc game (thắng hay thua)
     public void ShowEndGameUI(bool victory)
     {
-        SUIManager.ShowEndGameUI(victory);  // Gọi phương thức để hiển thị kết quả thắng/thua
+        SUIManager.ShowEndGameUI(victory); // Gọi phương thức để hiển thị kết quả thắng/thua
     }
 
     // Phương thức reset lại game
@@ -166,6 +181,7 @@ public class SGameManager : MonoBehaviour
 
         SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
         SUIManager.UpdateTimerUI(timer);
+
         Debug.Log("Game has been reset.");
     }
 
@@ -175,6 +191,14 @@ public class SGameManager : MonoBehaviour
         Debug.Log("Back to the main menu.");
         ResetGame();
         Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.MainMenuScene); // Load lại cảnh menu chính
+    }
+
+    // Phương thức chơi lại game
+    public void OnClickReplay()
+    {
+        Debug.Log("Replay the game.");
+        ResetGame();
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SScene); // Load lại cảnh game hiện tại
     }
 
     private void UnlockCursor()

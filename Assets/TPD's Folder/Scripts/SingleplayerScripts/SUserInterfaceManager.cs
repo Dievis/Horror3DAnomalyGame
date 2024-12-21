@@ -31,8 +31,9 @@ public class SUserInterfaceManager : MonoBehaviour
     {
         if (tutorialPanel == null) return;
         tutorialPanel.SetActive(true); // Kích hoạt panel hướng dẫn
-        PlayerHUD.SetActive(false);
+        if (PlayerHUD != null) PlayerHUD.SetActive(false); // Tắt HUD để tránh xung đột
         UnlockCursor();
+
     }
 
     // Ẩn panel hướng dẫn
@@ -40,10 +41,8 @@ public class SUserInterfaceManager : MonoBehaviour
     {
         if (tutorialPanel == null) return;
         tutorialPanel.SetActive(false);  // Tắt panel hướng dẫn
-        PlayerHUD.SetActive(true);
-        LockCursor();
+        if (PlayerHUD != null) PlayerHUD.SetActive(true); // Bật lại HUD
     }
-
 
     public void ShowExitButton()
     {
@@ -51,10 +50,11 @@ public class SUserInterfaceManager : MonoBehaviour
         ExitButton.SetActive(true);  // Hiển thị nút ExitButton
     }
 
-    // Thêm phương thức để xử lý khi nhấn ExitButton
+    // Thêm phương thức xử lý ExitButton
     public void OnExitButtonClick()
     {
-        HideTutorialPanel();  // Ẩn panel hướng dẫn khi nhấn ExitButton
+        HideTutorialPanel();  // Đảm bảo ẩn đúng tutorial panel
+        LockCursor();
     }
 
     // Hiển thị UI khi kết thúc trò chơi (thắng hoặc thua)
