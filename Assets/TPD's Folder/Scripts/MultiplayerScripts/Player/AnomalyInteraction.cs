@@ -21,6 +21,9 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
     // Tham chiếu đến AnomalyManager
     private AnomalyManager anomalyManager;
 
+    // Thêm tham chiếu đến GameManager
+    private GameManager gameManager;
+
     void Start()
     {
         // Lấy tham chiếu đến AnalogGlitch trên camera
@@ -48,6 +51,14 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
         if (anomalyManager == null)
         {
             Debug.LogError("AnomalyManager is missing in the scene.");
+        }
+
+        // Lấy tham chiếu đến GameManager
+        gameManager = FindObjectOfType<GameManager>();
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager không tồn tại trong scene.");
         }
     }
 
@@ -97,14 +108,11 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
                     // Kích hoạt glitch effect trên tất cả client
                     photonView.RPC("ActivateGlitchEffect", RpcTarget.All);
 
-                    PhotonView gameManagerPhotonView = GameManager.instance.GetComponent<PhotonView>();
-                    if (gameManagerPhotonView != null)
+                    // Gọi RPC để thông báo anomaly đã bị tìm thấy
+                    if (PhotonNetwork.IsMasterClient)
                     {
-                        gameManagerPhotonView.RPC("NotifyAnomalyFound", RpcTarget.All, currentAnomaly.GetPhotonView().ViewID);
-                    }
-                    else
-                    {
-                        Debug.LogError("GameManager does not have PhotonView!");
+                        // Gọi RPC từ GameManager thay vì từ AnomalyInteraction
+                        gameManager.photonView.RPC("NotifyAnomalyFound", RpcTarget.All, currentAnomaly.GetPhotonView().ViewID);
                     }
 
 
@@ -138,10 +146,12 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
             // Gọi phương thức DestroyAnomaly từ AnomalyManager
             anomalyManager.DestroyAnomaly(anomalyViewID);
 
+            // Thêm anomaly vào anomaliesProcessed
+            GameManager.instance.anomaliesProcessed.Add(currentAnomaly);
+
             // Thông báo anomaly đã bị xử lý
             GameManager.instance.GetComponent<PhotonView>().RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
         }
-
     }
 
     // RPC để kích hoạt glitch effect

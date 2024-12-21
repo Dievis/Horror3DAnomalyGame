@@ -3788,14 +3788,20 @@ PrefabInstance:
       addedObject: {fileID: 4287987336392072951}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: 3071095348415992800}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1498961610484917124}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: -5546881744915253964}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: -6772700324226171738}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6862979497972383688}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4208845571964959105}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2411984130955378129}
@@ -3804,28 +3810,22 @@ PrefabInstance:
       addedObject: {fileID: 5582418907246524980}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4208845571964959105}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 6015365793187579225}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8961011879718011600}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1498961610484917124}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -6772700324226171738}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -5546881744915253964}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7434393988192048158}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2139137050823254121}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 592791992781920204}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7434393988192048158}
   m_SourcePrefab: {fileID: 100100000, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
 --- !u!4 &1205650543641033701 stripped
 Transform:
@@ -3864,6 +3864,89 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1498961610484917124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013254600652136799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 1
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: -5546881744915253964}
+  - {fileID: -6772700324226171738}
+  - {fileID: 4208845571964959105}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-5546881744915253964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013254600652136799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &-6772700324226171738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013254600652136799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 0
+    Name: Blend
+  - Type: 1
+    SynchronizeType: 1
+    Name: X_Velocity
+  - Type: 1
+    SynchronizeType: 1
+    Name: Z_Velocity
+  - Type: 1
+    SynchronizeType: 1
+    Name: Y_Velocity
+  - Type: 4
+    SynchronizeType: 2
+    Name: Falling
+  - Type: 4
+    SynchronizeType: 0
+    Name: Grounded
+  - Type: 9
+    SynchronizeType: 0
+    Name: Jump
+  - Type: 4
+    SynchronizeType: 0
+    Name: Crouch
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!136 &6862979497972383688
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3887,36 +3970,6 @@ CapsuleCollider:
   m_Height: 1.78
   m_Direction: 1
   m_Center: {x: 0, y: 0.89, z: 0}
---- !u!114 &4208845571964959105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013254600652136799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e3193cad89ba4446b0d1b377bd20bae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AnimBlendSpeed: 8.9
-  CameraRoot: {fileID: 8680413833011540636}
-  Camera: {fileID: 5333092565896604608}
-  UpperLimit: -40
-  BottomLimit: 70
-  MouseSensitivity: 20
-  JumpFactor: 148
-  Dis2Ground: 0.9
-  GroundCheck:
-    serializedVersion: 2
-    m_Bits: 13
-  AirResistance: 0.8
-  maxStamina: 100
-  staminaDrainRate: 15
-  staminaRegenRate: 10
-  staminaRegenDelay: 2
-  staminaBar: {fileID: 0}
-  playerHUD: {fileID: 0}
 --- !u!114 &2411984130955378129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3960,6 +4013,38 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &4208845571964959105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2013254600652136799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3193cad89ba4446b0d1b377bd20bae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AnimBlendSpeed: 8.9
+  CameraRoot: {fileID: 8680413833011540636}
+  Camera: {fileID: 5333092565896604608}
+  UpperLimit: -40
+  BottomLimit: 70
+  MouseSensitivity: 20
+  JumpFactor: 148
+  Dis2Ground: 0.9
+  GroundCheck:
+    serializedVersion: 2
+    m_Bits: 13
+  AirResistance: 0.8
+  maxStamina: 100
+  staminaDrainRate: 15
+  staminaRegenRate: 10
+  staminaRegenDelay: 2
+  staminaBar: {fileID: 4241472583396966860}
+  playerHUD: {fileID: 574820149273830984}
+  _walkSpeed: 2
+  _runSpeed: 6
 --- !u!114 &6015365793187579225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3989,7 +4074,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EscMenuPanel: {fileID: 8566903861656812053}
   SettingsPanel: {fileID: 1195963437648589613}
---- !u!114 &1498961610484917124
+--- !u!114 &2139137050823254121
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3998,23 +4083,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2013254600652136799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b24dd055d9d417479da7379539c863e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 1
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 4208845571964959105}
-  - {fileID: -6772700324226171738}
-  - {fileID: -5546881744915253964}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &-6772700324226171738
+  playerCamera: {fileID: 1667707801505286563}
+  rayLength: 10
+  highlightColor: {r: 0.48235297, g: 0.8078432, b: 0.9568628, a: 1}
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+--- !u!114 &592791992781920204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4023,55 +4101,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2013254600652136799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ca0b5b36030a244e881ab305e620a13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 1
-    SynchronizeType: 0
-    Name: Blend
-  - Type: 1
-    SynchronizeType: 1
-    Name: X_Velocity
-  - Type: 1
-    SynchronizeType: 1
-    Name: Z_Velocity
-  - Type: 1
-    SynchronizeType: 1
-    Name: Y_Velocity
-  - Type: 4
-    SynchronizeType: 2
-    Name: Falling
-  - Type: 4
-    SynchronizeType: 0
-    Name: Grounded
-  - Type: 9
-    SynchronizeType: 0
-    Name: Jump
-  - Type: 4
-    SynchronizeType: 0
-    Name: Crouch
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
---- !u!114 &-5546881744915253964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013254600652136799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  recText: {fileID: 6497483128496084436}
+  circleImage: {fileID: 818709406037756775}
+  blinkSpeed: 0.5
+  cameraUIPanel: {fileID: 5103357845216895519}
+  BatteryImg: {fileID: 5481335340435772187}
+  FullBattery: {fileID: 21300000, guid: 692c00569b804d349b00445f08239980, type: 3}
+  HalfBattery: {fileID: 21300000, guid: f02e31639847b0645ae4fbdf08aa5d88, type: 3}
+  ChargeBattery: {fileID: 21300000, guid: 213a7b64eaee46e4b89efefe49d383de, type: 3}
+  batteryLevel: 3
+  timePassed: 0
+  isRecording: 0
 --- !u!82 &7434393988192048158
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4168,47 +4211,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2139137050823254121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013254600652136799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b24dd055d9d417479da7379539c863e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 1667707801505286563}
-  rayLength: 10
-  highlightColor: {r: 0.48235297, g: 0.8078432, b: 0.9568628, a: 1}
-  interactableLayer:
-    serializedVersion: 2
-    m_Bits: 2048
---- !u!114 &592791992781920204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2013254600652136799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ca0b5b36030a244e881ab305e620a13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recText: {fileID: 6497483128496084436}
-  circleImage: {fileID: 818709406037756775}
-  blinkSpeed: 0.5
-  cameraUIPanel: {fileID: 5103357845216895519}
-  BatteryImg: {fileID: 5481335340435772187}
-  FullBattery: {fileID: 21300000, guid: 692c00569b804d349b00445f08239980, type: 3}
-  HalfBattery: {fileID: 21300000, guid: f02e31639847b0645ae4fbdf08aa5d88, type: 3}
-  ChargeBattery: {fileID: 21300000, guid: 213a7b64eaee46e4b89efefe49d383de, type: 3}
-  batteryLevel: 3
-  timePassed: 0
-  isRecording: 0
 --- !u!4 &8700685328381664039 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8038615823857993513, guid: 3d760092cf52a8146882e1a413a21c9d, type: 3}
