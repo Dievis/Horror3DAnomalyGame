@@ -38,7 +38,7 @@ public class TransitionManagerUI : MonoBehaviour
     public void Singleplayer()
     {
         // Gọi phương thức LoadScene chung để tránh mã trùng lặp
-        LoadScene(Loader.Scene.LoadingScene, Loader.Scene.SScene);
+        LoadScene(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene);
     }
 
     public void Multiplayer()

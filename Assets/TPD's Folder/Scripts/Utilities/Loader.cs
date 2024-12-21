@@ -68,7 +68,7 @@ public static class Loader
     public enum Scene
     {
         MainMenuScene,
-        SScene,
+        SingleplayerScene,
         LoadingScene,
         ConnectToServerScene,
         LobbyScene,

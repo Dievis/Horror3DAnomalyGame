@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,13 +8,34 @@ public class SUserInterfaceManager : MonoBehaviour
     [Header("UI Panels")]  // Các panel UI
     [SerializeField] private GameObject winPanel;  // Panel hiển thị khi người chơi chiến thắng
     [SerializeField] private GameObject losePanel;  // Panel hiển thị khi người chơi thua
-    [SerializeField] private GameObject tutorialPanel;  // Panel hướng dẫn
+    [SerializeField] private GameObject countDown;  // Panel hướng dẫn
     [SerializeField] private GameObject matchInfoPanel;  // Panel thông tin trận đấu
     [SerializeField] private TMP_Text anomalyCountText;  // Text hiển thị số lượng anomaly đã tìm thấy
     [SerializeField] private TMP_Text timerText;  // Text hiển thị thời gian còn lại
     [SerializeField] private TMP_Text explorationTimerText; // Text hiển thị thời gian khám phá 
+    [SerializeField] public TMP_Text AnomalyScannedText; // Text hiển thị thời gian khám phá 
+    
     [SerializeField] private GameObject PlayerHUD;
-    [SerializeField] private GameObject ExitButton;
+
+    [Header("Player Movement Settings")]
+    [SerializeField] private MonoBehaviour playerMovementScript; // Script di chuyển của Player
+    [SerializeField] private float originalWalkSpeed; // Tốc độ đi bộ gốc của Player
+    [SerializeField] private float originalRunSpeed;  // Tốc độ chạy gốc của Player
+    [SerializeField] private string walkSpeedFieldName = "_walkSpeed"; // Tên trường tốc độ đi bộ
+    [SerializeField] private string runSpeedFieldName = "_runSpeed";  // Tên trường tốc độ chạy
+
+    [Header("Player Scripts")]
+    [SerializeField] private SCameraUI cameraUIScript; // Script SCameraUI
+
+    private void Awake()
+    {
+        if (playerMovementScript != null)
+        {
+            // Lưu giá trị tốc độ gốc khi khởi tạo
+            originalWalkSpeed = (float)playerMovementScript.GetType().GetField(walkSpeedFieldName)?.GetValue(playerMovementScript);
+            originalRunSpeed = (float)playerMovementScript.GetType().GetField(runSpeedFieldName)?.GetValue(playerMovementScript);
+        }
+    }
 
     // Cập nhật số lượng anomaly trong UI
     public void UpdateAnomalyCountUI(int anomaliesFound, int totalAnomalies)
@@ -41,35 +63,55 @@ public class SUserInterfaceManager : MonoBehaviour
     }
 
 
-    // Hiển thị panel hướng dẫn
-    public void ShowTutorialPanel()
+    public void ShowCountDownPanel()
     {
-        if (tutorialPanel == null) return;
-        tutorialPanel.SetActive(true); // Kích hoạt panel hướng dẫn
-        if (PlayerHUD != null) PlayerHUD.SetActive(false); // Tắt HUD để tránh xung đột
-        UnlockCursor();
+        if (countDown == null) return;
+        countDown.SetActive(true);
+        if (PlayerHUD != null) PlayerHUD.SetActive(false);
 
+        // Vô hiệu hóa Player di chuyển và SCameraUI
+        if (playerMovementScript != null)
+        {
+            // Đặt tốc độ đi bộ và chạy về 0
+            playerMovementScript.GetType().GetField(walkSpeedFieldName)?.SetValue(playerMovementScript, 0f);
+            playerMovementScript.GetType().GetField(runSpeedFieldName)?.SetValue(playerMovementScript, 0f);
+        }
+
+        if (cameraUIScript != null) cameraUIScript.enabled = false;
+
+        StartCoroutine(CountdownCoroutine());
     }
 
-    // Ẩn panel hướng dẫn
-    public void HideTutorialPanel()
+    private IEnumerator CountdownCoroutine()
     {
-        if (tutorialPanel == null) return;
-        tutorialPanel.SetActive(false);  // Tắt panel hướng dẫn
-        if (PlayerHUD != null) PlayerHUD.SetActive(true); // Bật lại HUD
+        TMP_Text countdownText = countDown.GetComponentInChildren<TMP_Text>();
+        if (countdownText == null) yield break;
+
+        int countdownValue = 5;
+        while (countdownValue > 0)
+        {
+            countdownText.text = countdownValue.ToString();
+            yield return new WaitForSeconds(1f);
+            countdownValue--;
+        }
+
+        // Khôi phục tốc độ di chuyển của Player và SCameraUI
+        if (playerMovementScript != null)
+        {
+            playerMovementScript.GetType().GetField(walkSpeedFieldName)?.SetValue(playerMovementScript, originalWalkSpeed);
+            playerMovementScript.GetType().GetField(runSpeedFieldName)?.SetValue(playerMovementScript, originalRunSpeed);
+        }
+
+        if (cameraUIScript != null) cameraUIScript.enabled = true;
+
+        HideCountDownPanel();
     }
 
-    public void ShowExitButton()
+    public void HideCountDownPanel()
     {
-        if (ExitButton == null) return;
-        ExitButton.SetActive(true);  // Hiển thị nút ExitButton
-    }
-
-    // Thêm phương thức xử lý ExitButton
-    public void OnExitButtonClick()
-    {
-        HideTutorialPanel();  // Đảm bảo ẩn đúng tutorial panel
-        LockCursor();
+        if (countDown == null) return;
+        countDown.SetActive(false);
+        if (PlayerHUD != null) PlayerHUD.SetActive(true);
     }
 
     // Hiển thị UI khi kết thúc trò chơi (thắng hoặc thua)

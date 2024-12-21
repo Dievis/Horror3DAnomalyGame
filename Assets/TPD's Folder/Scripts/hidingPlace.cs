@@ -5,7 +5,7 @@ using UnityEngine;
 public class hidingPlace : MonoBehaviour
 {
     public GameObject hideText, stopHideText;
-    public GameObject normalPlayer, hidingPlayer;
+    public GameObject normalPlayer; // Không cần hidingPlayer nữa vì sẽ lấy PlayerCamera từ nơi trốn
 
     // Danh sách chứa tất cả các quái có EnemyAI
     public List<EnemyAI> monsterScripts = new List<EnemyAI>();
@@ -13,17 +13,21 @@ public class hidingPlace : MonoBehaviour
 
     public float loseDistance;
 
-    private bool interactable = false;
-    private bool hiding = false;
+    public bool interactable = false;
+    public bool hiding = false;
     private bool beingAttacked = false; // Biến để kiểm tra bị tấn công
     public Rigidbody rb;
-    public GameObject playerCamera, moDel;
+    private GameObject playerCamera; // Camera sẽ được lấy từ con của nơi trốn
+    public GameObject moDel;
     public CapsuleCollider playerCapsule;
 
     void Start()
     {
         rb = normalPlayer.GetComponent<Rigidbody>();
         playerCapsule = normalPlayer.GetComponent<CapsuleCollider>();
+
+        // Lấy PlayerCamera là con của nơi trốn
+        playerCamera = transform.Find("PlayerCamera").gameObject;
 
         // Tự động tìm tất cả các quái có EnemyAI và thêm vào danh sách
         EnemyAI[] enemies = FindObjectsOfType<EnemyAI>(); // Tìm tất cả các script EnemyAI
@@ -83,11 +87,10 @@ public class hidingPlace : MonoBehaviour
     {
         hideText.SetActive(false);
         stopHideText.SetActive(true);
-        hidingPlayer.SetActive(true);
         hiding = true;
 
         rb.useGravity = false;
-        playerCamera.SetActive(false);
+        playerCamera.SetActive(true); // Kích hoạt PlayerCamera của nơi trốn
         moDel.SetActive(false);
         playerCapsule.enabled = false;
 
@@ -107,11 +110,10 @@ public class hidingPlace : MonoBehaviour
         if (!beingAttacked) // Chỉ thoát ra nếu không bị quái tấn công
         {
             stopHideText.SetActive(false);
-            hidingPlayer.SetActive(false);
             hiding = false;
 
             rb.useGravity = true;
-            playerCamera.SetActive(true);
+            playerCamera.SetActive(false); // Tắt PlayerCamera của nơi trốn
             moDel.SetActive(true);
             playerCapsule.enabled = true;
         }

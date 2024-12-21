@@ -1,9 +1,8 @@
-﻿using Photon.Pun;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI; // Import UI namespace
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviourPunCallbacks
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 5f;
@@ -14,6 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [Header("Mouse Look Settings")]
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private Transform cameraTransform;
+    [SerializeField] private float cameraHeightOffset = 0.665f; // Thêm độ dời cho camera
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     [SerializeField] private Image staminaBar; // Reference to the UI Image for stamina bar
     [SerializeField] private GameObject playerHUD; // Reference to the player's HUD
 
+
     private CharacterController characterController;
     private Vector3 velocity;
     private bool isGrounded;
@@ -43,39 +44,31 @@ public class PlayerController : MonoBehaviourPunCallbacks
         characterController = GetComponent<CharacterController>();
         currentStamina = maxStamina;
 
-        if (photonView.IsMine)
-        {
-            // Chỉ hiển thị HUD cho player này
-            playerHUD.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            // Ẩn HUD của các player khác
-            playerHUD.SetActive(false);
-            cameraTransform.gameObject.SetActive(false);
-        }
+        // Hiển thị HUD cho người chơi
+        playerHUD.SetActive(true);
+        Cursor.lockState = CursorLockMode.Locked;
 
         UpdateStaminaUI(); // Initialize UI
+
+        // Điều chỉnh Near Clipping Plane của camera
+        cameraTransform.GetComponent<Camera>().nearClipPlane = 0.1f;
+        // Kích hoạt Occlusion Culling
+        cameraTransform.GetComponent<Camera>().useOcclusionCulling = true;
+
+        // Thiết lập độ dời camera cho phù hợp với chiều cao mắt của player
+        cameraHeightOffset = 0.665f;
     }
 
     private void Update()
     {
-        // Kiểm tra xem trò chơi có đang ở chế độ Multiplayer không
-        if (PhotonNetwork.IsConnected)
-        {
-            if (photonView.IsMine) // Nếu là của người chơi hiện tại
-            {
-                HandleMovement();
-                HandleMouseLook();
-            }
-        }
-        else
-        {
-            // Xử lý chuyển động và UI cho chế độ Singleplayer (không có Photon)
-            HandleMovement();
-            HandleMouseLook();
-        }
+        HandleMovement();
+        HandleMouseLook();
+        HandleCameraCollision(); // Kiểm tra va chạm của camera
+
+        // Cập nhật vị trí của camera với độ dời chiều cao
+        Vector3 cameraPosition = cameraTransform.localPosition;
+        cameraPosition.y = cameraHeightOffset;
+        cameraTransform.localPosition = cameraPosition;
     }
 
     private void HandleMovement()
@@ -101,12 +94,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
             currentStamina -= staminaDrainRate * Time.deltaTime;
             currentStamina = Mathf.Max(currentStamina, 0);
             staminaRegenTimer = 0f; // Reset stamina regen timer
-
-            // Đồng bộ trạng thái stamina cho các máy khách trong multiplayer
-            if (PhotonNetwork.IsConnected && photonView.IsMine)
-            {
-                photonView.RPC("UpdateStamina", RpcTarget.Others, currentStamina);  // Cập nhật stamina cho các máy khách khác
-            }
         }
         else if (currentStamina < maxStamina)
         {
@@ -115,16 +102,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
             {
                 currentStamina += staminaRegenRate * Time.deltaTime;
                 currentStamina = Mathf.Min(currentStamina, maxStamina);
-
-                // Đồng bộ trạng thái stamina cho các máy khách trong multiplayer
-                if (PhotonNetwork.IsConnected && photonView.IsMine)
-                {
-                    photonView.RPC("UpdateStamina", RpcTarget.Others, currentStamina);  // Cập nhật stamina cho các máy khách khác
-                }
             }
         }
 
-        UpdateStaminaUI(); // Cập nhật UI trên máy khách hiện tại
+        UpdateStaminaUI(); // Cập nhật UI
 
         characterController.Move(move * currentSpeed * Time.deltaTime);
 
@@ -144,10 +125,19 @@ public class PlayerController : MonoBehaviourPunCallbacks
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        xRotation = Mathf.Clamp(xRotation, -45f, 45f);
 
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    private void HandleCameraCollision()
+    {
+        RaycastHit hit;
+        if (Physics.Linecast(transform.position, cameraTransform.position, out hit))
+        {
+            cameraTransform.position = hit.point;
+        }
     }
 
     private void UpdateStaminaUI()
@@ -156,13 +146,5 @@ public class PlayerController : MonoBehaviourPunCallbacks
         {
             staminaBar.fillAmount = currentStamina / maxStamina;
         }
-    }
-
-    // RPC để đồng bộ stamina với các máy khách khác trong Multiplayer
-    [PunRPC]
-    private void UpdateStamina(float newStamina)
-    {
-        currentStamina = newStamina;
-        UpdateStaminaUI();
     }
 }
