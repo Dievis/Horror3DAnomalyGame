@@ -22,7 +22,8 @@ public class EnemyAI : MonoBehaviour
     public GameObject deathPanel;
     public GameObject cameRa;
     public AudioSource deathAudio; // AudioSource để phát âm thanh
-    public AudioSource walkingAudio; 
+    public AudioSource walkingAudio;
+    public AudioSource chasingAudio;
 
 
     void Start()
@@ -54,6 +55,20 @@ public class EnemyAI : MonoBehaviour
             aiAnim.ResetTrigger("walk");
             aiAnim.ResetTrigger("idle");
             aiAnim.SetTrigger("sprint");
+
+            // Dừng âm thanh khi đang chasing
+            if (walkingAudio.isPlaying)
+            {
+                walkingAudio.Stop();
+            }
+
+            // Phát âm thanh chasing
+            if (!chasingAudio.isPlaying)
+            {
+                chasingAudio.Play();
+            }
+
+
             float distance = Vector3.Distance(player.position, ai.transform.position);
             if (distance <= catchDistance)
             {
@@ -66,6 +81,12 @@ public class EnemyAI : MonoBehaviour
                 aiAnim.SetTrigger("jumpscare");
                 StartCoroutine(deathRoutine());
                 chasing = false;
+
+                // Dừng âm thanh chasing khi bắt được người chơi
+                if (chasingAudio.isPlaying)
+                {
+                    chasingAudio.Stop();
+                }
             }
         }
         if (walking == true)
@@ -76,15 +97,45 @@ public class EnemyAI : MonoBehaviour
             aiAnim.ResetTrigger("sprint");
             aiAnim.ResetTrigger("idle");
             aiAnim.SetTrigger("walk");
+
+            // Phát âm thanh khi đang walking
+            if (!walkingAudio.isPlaying)
+            {
+                walkingAudio.Play();
+            }
+
+            // Dừng âm thanh chasing nếu Enemy không chasing nữa
+            if (chasingAudio.isPlaying)
+            {
+                chasingAudio.Stop();
+            }
+
             if (ai.remainingDistance <= ai.stoppingDistance)
             {
                 aiAnim.ResetTrigger("sprint");
                 aiAnim.ResetTrigger("walk");
                 aiAnim.SetTrigger("idle");
+
+                // Dừng âm thanh nếu không phải trạng thái walking
+                if (walkingAudio.isPlaying)
+                {
+                    walkingAudio.Stop();
+                }
+
+
+
                 ai.speed = 0;
                 StopCoroutine("stayIdle");
                 StartCoroutine("stayIdle");
                 walking = false;
+            }
+        }
+        else
+        {
+            // Dừng âm thanh nếu không phải trạng thái walking
+            if (walkingAudio.isPlaying)
+            {
+                walkingAudio.Stop();
             }
         }
     }
@@ -92,8 +143,16 @@ public class EnemyAI : MonoBehaviour
     {
         walking = true;
         chasing = false;
+
+        if (chasingAudio.isPlaying)
+        {
+            chasingAudio.Stop();
+        }
+
         StopCoroutine("chaseRoutine");
         currentDest = destinations[Random.Range(0, destinations.Count)];
+
+
     }
     IEnumerator stayIdle()
     {
