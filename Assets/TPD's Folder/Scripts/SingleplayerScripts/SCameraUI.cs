@@ -17,8 +17,10 @@ public class SCameraUI : MonoBehaviour
     public Sprite HalfBattery;        // Sprite cho pin một nửa
     public Sprite ChargeBattery;      // Sprite cho pin cần sạc
 
+    [Header("Battery level: 3 = Full, 2 = Half, 1 = Charge, 0 = Game over")]
     public int batteryLevel = 3;     // Mức pin: 3 là đầy, 2 là một nửa, 1 là cần sạc, 0 là thua
-    private Coroutine blinkCoroutine; // Tham chiếu đến Coroutine nhấp nháy
+    private Coroutine blinkCoroutine;
+    [Header("Time passed >= 30 : -1 battery level")]// Tham chiếu đến Coroutine nhấp nháy
     public float timePassed = 0f;    // Biến đếm thời gian trôi qua mỗi frame
 
     void Start()

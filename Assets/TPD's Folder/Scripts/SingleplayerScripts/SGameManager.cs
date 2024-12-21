@@ -43,7 +43,7 @@ public class SGameManager : MonoBehaviour
         timer = gameDuration;  // Khởi tạo thời gian
 
         // Chỉ hiển thị Panel Hướng dẫn nếu chưa từng hiển thị
-        SUIManager.ShowTutorialPanel();
+        SUIManager.ShowCountDownPanel();
 
         // Reset UI ngay lập tức để tránh hiển thị sai thông tin
         SUIManager.ResetUI();
@@ -70,10 +70,9 @@ public class SGameManager : MonoBehaviour
             Debug.Log("Trò chơi đã bắt đầu! Tổng anomalies: " + totalAnomalies);
             SUIManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
 
-            // Gọi HideTutorialPanel khi tất cả anomalies đã spawn xong
-            SUIManager.ShowExitButton();
+            // Gọi HideCountDownPanel khi tất cả anomalies đã spawn xong
+            SUIManager.HideCountDownPanel();
 
-            // Khi người chơi nhấn nút Exit, tắt TutorialPanel và gọi hàm Wait1Min
             yield return StartCoroutine(Wait1Min());
 
         }
@@ -264,7 +263,7 @@ public class SGameManager : MonoBehaviour
     {
         Debug.Log("Replay the game.");
         ResetGame();
-        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SScene); // Load lại cảnh game hiện tại
+        Loader.Load(Loader.Scene.LoadingScene, Loader.Scene.SingleplayerScene); // Load lại cảnh game hiện tại
     }
 
     private void UnlockCursor()

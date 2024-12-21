@@ -205,13 +205,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 488259485}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &1870200
@@ -816,13 +815,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 206602248}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &34236800
@@ -3197,13 +3195,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 1211849181}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &175779234
@@ -4114,7 +4111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &237376459
 Transform:
   m_ObjectHideFlags: 0
@@ -4968,13 +4965,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 1256497473}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &286774948
@@ -6088,13 +6084,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 1142549955}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &352629425
@@ -6771,13 +6766,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 856100132}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &405228111
@@ -7158,7 +7152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &423411738
 Transform:
   m_ObjectHideFlags: 0
@@ -7343,13 +7337,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 280081117}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &438236152
@@ -9425,11 +9418,6 @@ Transform:
   - {fileID: 1706906324}
   m_Father: {fileID: 32017841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &539875463 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8980059617455018723, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
-  m_PrefabInstance: {fileID: 1240921024}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &541705181
 GameObject:
   m_ObjectHideFlags: 0
@@ -10694,7 +10682,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &608445856
 Transform:
   m_ObjectHideFlags: 0
@@ -10909,7 +10897,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &638966704
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11650,13 +11638,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 1524661747371142161}
-  hidingPlayer: {fileID: 710796720}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 6182834625807514710}
-  playerCamera: {fileID: 8069825327327470289}
   moDel: {fileID: 5268679185289397215}
   playerCapsule: {fileID: 240961146778413472}
 --- !u!1 &677148612
@@ -12134,11 +12121,6 @@ Transform:
   - {fileID: 1273279796}
   m_Father: {fileID: 31855234}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &710796720 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1524661746795310464, guid: ababecd6c97d43d489dc77803cd552bc, type: 3}
-  m_PrefabInstance: {fileID: 2088131545}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &710796729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2189733942560307002, guid: ababecd6c97d43d489dc77803cd552bc, type: 3}
@@ -13386,13 +13368,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 1524661747198277871}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &785230574
@@ -14110,7 +14091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &817096101
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16705,13 +16686,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 526311371}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &1009945632
@@ -17180,6 +17160,75 @@ Transform:
   - {fileID: 275536451}
   m_Father: {fileID: 1817307891}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1033335491
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1082907920590979935, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1240921025}
+    - target: {fileID: 2095404029076204811, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1240921025}
+    - target: {fileID: 6994092054939396251, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_Name
+      value: Player (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7165414131053298758, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864033253998241009, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1240921025}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bcfecb124cfb65f44bdce8835647bcee, type: 3}
 --- !u!1 &1033846904
 GameObject:
   m_ObjectHideFlags: 0
@@ -19365,13 +19414,12 @@ MonoBehaviour:
   hideText: {fileID: 1211813614}
   stopHideText: {fileID: 410559408}
   normalPlayer: {fileID: 912672707}
-  hidingPlayer: {fileID: 650385382}
   monsterScripts: []
   monsterTransforms: []
   loseDistance: 10
-  raycastLength: 3
+  interactable: 0
+  hiding: 0
   rb: {fileID: 912672717}
-  playerCamera: {fileID: 539875463}
   moDel: {fileID: 935622581}
   playerCapsule: {fileID: 912672716}
 --- !u!54 &1202045459
@@ -20605,15 +20653,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Singleplayer (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6016262783812481811, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6129108757934336243, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
       propertyPath: MouseSensitivity
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 9189333125883222678, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 7384728966930619566, guid: 1ad6b6cd655119a419f231e8bb931d54, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+--- !u!114 &1240921025 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 90254189563567442, guid: ea6870fc40e727748bad8e0dac820512, type: 3}
+  m_PrefabInstance: {fileID: 1240921024}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912672707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6f915e4c34398e40b1dc6d76b63bd17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1244548013
 GameObject:
   m_ObjectHideFlags: 0
@@ -21776,7 +21843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1296484336
 Transform:
   m_ObjectHideFlags: 0
@@ -21863,7 +21930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1297802801
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23833,7 +23900,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1466894275
 Transform:
   m_ObjectHideFlags: 0
@@ -29349,7 +29416,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1916928179
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32603,7 +32670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &2100963929
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41116,6 +41183,7 @@ MonoBehaviour:
   cameRa: {fileID: 2138866128}
   deathAudio: {fileID: 0}
   walkingAudio: {fileID: 0}
+  chasingAudio: {fileID: 0}
 --- !u!1 &4421149627253577890
 GameObject:
   m_ObjectHideFlags: 0
@@ -43520,7 +43588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5856084630212908140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43571,6 +43639,7 @@ MonoBehaviour:
   cameRa: {fileID: 2138866128}
   deathAudio: {fileID: 0}
   walkingAudio: {fileID: 0}
+  chasingAudio: {fileID: 0}
 --- !u!195 &5856084630212908141
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -49591,3 +49660,4 @@ SceneRoots:
   - {fileID: 817096102}
   - {fileID: 937782182}
   - {fileID: 1240921024}
+  - {fileID: 1033335491}
