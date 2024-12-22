@@ -81,6 +81,19 @@ MonoBehaviour:
   - ShowEndGameUI
   - RPC_DecreaseBatteryLevel
   - RPC_UpdateRecordingState
+  - DisablePlayerMovement
+  - EnablePlayerMovement
+  - SyncAnomaliesCount
+  - SyncAnomaliesFound
+  - NotifyAnomalyFoundOnAllClients
+  - ShowEndGameUI_RPC
+  - AddToProcessedAnomalies
+  - RPC_BatteryDepleted
+  - ConfirmAnomalyDestruction
+  - UpdateAnomaliesFound
+  - CheckVictoryCondition
+  - EndGame
+  - UpdateAnomalyCount
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

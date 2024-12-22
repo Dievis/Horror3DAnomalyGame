@@ -21,6 +21,9 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
     // Tham chiếu đến AnomalyManager
     private AnomalyManager anomalyManager;
 
+    // Thêm tham chiếu đến GameManager
+    private GameManager gameManager;
+
     void Start()
     {
         // Lấy tham chiếu đến AnalogGlitch trên camera
@@ -48,6 +51,14 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
         if (anomalyManager == null)
         {
             Debug.LogError("AnomalyManager is missing in the scene.");
+        }
+
+        // Lấy tham chiếu đến GameManager
+        gameManager = FindObjectOfType<GameManager>();
+
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager không tồn tại trong scene.");
         }
     }
 
@@ -97,17 +108,6 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
                     // Kích hoạt glitch effect trên tất cả client
                     photonView.RPC("ActivateGlitchEffect", RpcTarget.All);
 
-                    PhotonView gameManagerPhotonView = GameManager.instance.GetComponent<PhotonView>();
-                    if (gameManagerPhotonView != null)
-                    {
-                        gameManagerPhotonView.RPC("NotifyAnomalyFound", RpcTarget.All, currentAnomaly.GetPhotonView().ViewID);
-                    }
-                    else
-                    {
-                        Debug.LogError("GameManager does not have PhotonView!");
-                    }
-
-
                     // Reset lại trạng thái nhìn vào anomaly
                     isLookingAtAnomaly = false;
                 }
@@ -132,16 +132,51 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestAnomalyDestruction(int anomalyViewID)
     {
-        // Chỉ Master Client mới xử lý yêu cầu xóa anomaly
         if (PhotonNetwork.IsMasterClient)
         {
-            // Gọi phương thức DestroyAnomaly từ AnomalyManager
             anomalyManager.DestroyAnomaly(anomalyViewID);
+            photonView.RPC("AddToProcessedAnomalies", RpcTarget.All, anomalyViewID);
+            photonView.RPC("UpdateAnomaliesFound", RpcTarget.All);
 
-            // Thông báo anomaly đã bị xử lý
-            GameManager.instance.GetComponent<PhotonView>().RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
+            GameManager.instance.photonView.RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
+
+            // Sau khi xóa anomaly, kiểm tra điều kiện thắng thua
+            photonView.RPC("CheckVictoryCondition", RpcTarget.All);
         }
+    }
 
+    [PunRPC]
+    public void AddToProcessedAnomalies(int anomalyViewID)
+    {
+        if (!gameManager.anomaliesProcessed.Contains(anomalyViewID))
+        {
+            gameManager.anomaliesProcessed.Add(anomalyViewID);
+            Debug.Log("Anomaly added to processed list: " + anomalyViewID);
+        }
+        else
+        {
+            Debug.Log("Anomaly not added (already processed): " + anomalyViewID);
+        }
+    }
+
+    [PunRPC]
+    public void UpdateAnomaliesFound()
+    {
+        GameManager.instance.uiManager.UpdateAnomalyCountUI(GameManager.instance.anomaliesProcessed.Count, GameManager.instance.totalAnomalies);
+    }
+
+    // RPC kiểm tra điều kiện thắng thua
+    [PunRPC]
+    public void CheckVictoryCondition()
+    {
+        GameManager.instance.CheckVictoryCondition();
+    }
+
+    // RPC để kết thúc game
+    [PunRPC]
+    public void EndGame(bool victory)
+    {
+        gameManager.EndGame(victory);
     }
 
     // RPC để kích hoạt glitch effect

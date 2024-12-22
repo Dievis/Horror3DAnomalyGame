@@ -41,8 +41,8 @@ namespace DACNNEWMAP.PlayerControl
         private int _crouchHash;
         private float _xRotation;
 
-        private const float _walkSpeed = 2f;
-        private const float _runSpeed = 6f;
+        public float _walkSpeed = 4f;
+        public float _runSpeed = 10f;
         private Vector2 _currentVelocity;
 
         private float currentStamina;

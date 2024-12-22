@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Photon.Pun.Demo.PunBasics;
 
 public class CameraUI : MonoBehaviourPunCallbacks
 {
@@ -11,6 +12,7 @@ public class CameraUI : MonoBehaviourPunCallbacks
     public float blinkSpeed = 0.5f;   // Tốc độ nhấp nháy (thay đổi nếu cần)
 
     public GameObject cameraUIPanel;  // Tham chiếu đến Panel chứa các UI cần hiển thị/ẩn
+    public GameObject light;
 
     public Image BatteryImg;          // Tham chiếu đến Image hiển thị pin
     public Sprite FullBattery;        // Sprite cho pin đầy
@@ -25,6 +27,8 @@ public class CameraUI : MonoBehaviourPunCallbacks
     public float timePassed = 0f;    // Biến đếm thời gian trôi qua mỗi frame
 
     public bool isRecording = false;  // Trạng thái quay video
+
+    private GameManager gameManager;
 
     void Start()
     {
@@ -69,7 +73,7 @@ public class CameraUI : MonoBehaviourPunCallbacks
     public void StartRecording()
     {
         if (!photonView.IsMine) return;
-
+        light.SetActive(true);
         isRecording = true;
         photonView.RPC("RPC_UpdateRecordingState", RpcTarget.All, isRecording);
     }
@@ -77,7 +81,7 @@ public class CameraUI : MonoBehaviourPunCallbacks
     public void StopRecording()
     {
         if (!photonView.IsMine) return;
-
+        light.SetActive(false);
         isRecording = false;
         photonView.RPC("RPC_UpdateRecordingState", RpcTarget.All, isRecording);
     }
@@ -136,8 +140,15 @@ public class CameraUI : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.LogWarning("Battery is dead!");
+            photonView.RPC("RPC_BatteryDepleted", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    private void RPC_BatteryDepleted()
+    {
+        // Call GameManager to check if all players are out of battery
+        gameManager.CheckAllPlayersOutOfBattery();
     }
 
     public void TogglePanel()
@@ -146,6 +157,7 @@ public class CameraUI : MonoBehaviourPunCallbacks
         {
             bool isActive = cameraUIPanel.activeSelf;
             cameraUIPanel.SetActive(!isActive);
+
 
             if (cameraUIPanel.activeSelf)
             {

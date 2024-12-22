@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Photon.Pun.Demo.PunBasics;
 
 public class SCameraUI : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SCameraUI : MonoBehaviour
 
     public bool isRecording = false;  // Trạng thái quay video
     public GameObject cameraUIPanel;  // Tham chiếu đến Panel chứa các UI cần hiển thị/ẩn
+    public GameObject FlashLight;
 
     public Image BatteryImg;          // Tham chiếu đến Image hiển thị pin
     public Sprite FullBattery;        // Sprite cho pin đầy
@@ -22,6 +24,8 @@ public class SCameraUI : MonoBehaviour
     private Coroutine blinkCoroutine;
     [Header("Time passed >= 30 : -1 battery level")]// Tham chiếu đến Coroutine nhấp nháy
     public float timePassed = 0f;    // Biến đếm thời gian trôi qua mỗi frame
+
+    private SGameManager gameManager;
 
     void Start()
     {
@@ -75,6 +79,7 @@ public class SCameraUI : MonoBehaviour
     public void StartRecording()
     {
         isRecording = true;
+        FlashLight.SetActive(true);
         Debug.Log("Recording Started");
         UpdateRecordingUI();
     }
@@ -83,6 +88,7 @@ public class SCameraUI : MonoBehaviour
     public void StopRecording()
     {
         isRecording = false;
+        FlashLight.SetActive(false);
         Debug.Log("Recording Stopped");
         UpdateRecordingUI();
     }
@@ -138,6 +144,7 @@ public class SCameraUI : MonoBehaviour
         }
         else
         {
+            gameManager.EndGame(false);
             Debug.LogWarning("Battery is dead!");
         }
     }
