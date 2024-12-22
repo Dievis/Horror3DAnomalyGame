@@ -40,12 +40,17 @@ public class SAnomalySpawn : MonoBehaviour
         }
         spawnedAnomalies.Clear();
 
-        foreach (GameObject anomalyPrefab in anomalyPrefabs)
+        // Đảm bảo số lượng spawn không vượt quá số lượng vị trí spawn có sẵn
+        int spawnCount = Mathf.Min(anomalyPrefabs.Length, spawnPoints.Length);
+
+        for (int i = 0; i < spawnCount; i++)
         {
             Transform spawnPoint = GetRandomSpawnPoint();
 
             if (spawnPoint != null)
             {
+                GameObject anomalyPrefab = anomalyPrefabs[i];
+
                 Debug.Log($"Spawning anomaly: {anomalyPrefab.name} at {spawnPoint.position}");
 
                 // Spawn anomaly

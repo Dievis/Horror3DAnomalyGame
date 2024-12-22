@@ -3,7 +3,14 @@ guid: 43b148db2057c58478fad01309087abd
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - recText: {instanceID: 0}
+  - circleImage: {instanceID: 0}
+  - cameraUIPanel: {instanceID: 0}
+  - BatteryImg: {instanceID: 0}
+  - FullBattery: {fileID: 21300000, guid: 692c00569b804d349b00445f08239980, type: 3}
+  - HalfBattery: {fileID: 21300000, guid: f02e31639847b0645ae4fbdf08aa5d88, type: 3}
+  - ChargeBattery: {fileID: 21300000, guid: 213a7b64eaee46e4b89efefe49d383de, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

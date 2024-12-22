@@ -108,14 +108,6 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
                     // Kích hoạt glitch effect trên tất cả client
                     photonView.RPC("ActivateGlitchEffect", RpcTarget.All);
 
-                    // Gọi RPC để thông báo anomaly đã bị tìm thấy
-                    if (PhotonNetwork.IsMasterClient)
-                    {
-                        // Gọi RPC từ GameManager thay vì từ AnomalyInteraction
-                        gameManager.photonView.RPC("NotifyAnomalyFound", RpcTarget.All, currentAnomaly.GetPhotonView().ViewID);
-                    }
-
-
                     // Reset lại trạng thái nhìn vào anomaly
                     isLookingAtAnomaly = false;
                 }
@@ -140,18 +132,51 @@ public class AnomalyInteraction : MonoBehaviourPunCallbacks
     [PunRPC]
     public void RequestAnomalyDestruction(int anomalyViewID)
     {
-        // Chỉ Master Client mới xử lý yêu cầu xóa anomaly
         if (PhotonNetwork.IsMasterClient)
         {
-            // Gọi phương thức DestroyAnomaly từ AnomalyManager
             anomalyManager.DestroyAnomaly(anomalyViewID);
+            photonView.RPC("AddToProcessedAnomalies", RpcTarget.All, anomalyViewID);
+            photonView.RPC("UpdateAnomaliesFound", RpcTarget.All);
 
-            // Thêm anomaly vào anomaliesProcessed
-            GameManager.instance.anomaliesProcessed.Add(currentAnomaly);
+            GameManager.instance.photonView.RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
 
-            // Thông báo anomaly đã bị xử lý
-            GameManager.instance.GetComponent<PhotonView>().RPC("NotifyAnomalyFound", RpcTarget.All, anomalyViewID);
+            // Sau khi xóa anomaly, kiểm tra điều kiện thắng thua
+            photonView.RPC("CheckVictoryCondition", RpcTarget.All);
         }
+    }
+
+    [PunRPC]
+    public void AddToProcessedAnomalies(int anomalyViewID)
+    {
+        if (!gameManager.anomaliesProcessed.Contains(anomalyViewID))
+        {
+            gameManager.anomaliesProcessed.Add(anomalyViewID);
+            Debug.Log("Anomaly added to processed list: " + anomalyViewID);
+        }
+        else
+        {
+            Debug.Log("Anomaly not added (already processed): " + anomalyViewID);
+        }
+    }
+
+    [PunRPC]
+    public void UpdateAnomaliesFound()
+    {
+        GameManager.instance.uiManager.UpdateAnomalyCountUI(GameManager.instance.anomaliesProcessed.Count, GameManager.instance.totalAnomalies);
+    }
+
+    // RPC kiểm tra điều kiện thắng thua
+    [PunRPC]
+    public void CheckVictoryCondition()
+    {
+        GameManager.instance.CheckVictoryCondition();
+    }
+
+    // RPC để kết thúc game
+    [PunRPC]
+    public void EndGame(bool victory)
+    {
+        gameManager.EndGame(victory);
     }
 
     // RPC để kích hoạt glitch effect

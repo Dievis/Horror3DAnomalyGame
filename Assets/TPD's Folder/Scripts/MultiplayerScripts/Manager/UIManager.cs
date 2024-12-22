@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using DACNNEWMAP.PlayerControl;
+using System.Reflection;
 
 public class UIManager : MonoBehaviourPunCallbacks
 {
@@ -22,38 +23,54 @@ public class UIManager : MonoBehaviourPunCallbacks
     [SerializeField] private MultiplayerController playerMovementScript;
     [SerializeField] private float originalWalkSpeed;
     [SerializeField] private float originalRunSpeed;
-    private string walkSpeedFieldName = "_walkSpeed";  
-    private string runSpeedFieldName = "_runSpeed";  
+    private FieldInfo walkSpeedField;
+    private FieldInfo runSpeedField;
 
     [Header("Player Scripts")] // Các script liên quan đến người chơi
-    [SerializeField] private SCameraUI cameraUIScript; // Script điều khiển camera UI
+    [SerializeField] private CameraUI cameraUIScript; // Script điều khiển camera UI
 
     private void Start()
     {
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            // Tìm kiếm player của client hiện tại
-            GameObject playerObject = PhotonNetwork.LocalPlayer.TagObject as GameObject;
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
 
             if (playerObject != null)
             {
-                // Gán các script vào UIManager khi player spawn vào scene
                 playerMovementScript = playerObject.GetComponent<MultiplayerController>();
 
-                // Lưu lại tốc độ đi bộ và chạy gốc của người chơi
                 if (playerMovementScript != null)
                 {
-                    originalWalkSpeed = playerMovementScript._walkSpeed;
-                    originalRunSpeed = playerMovementScript._runSpeed;
+                    // Sử dụng reflection để lấy thông tin về các trường _walkSpeed và _runSpeed
+                    walkSpeedField = playerMovementScript.GetType().GetField("_walkSpeed", BindingFlags.Instance | BindingFlags.NonPublic);
+                    runSpeedField = playerMovementScript.GetType().GetField("_runSpeed", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                    if (walkSpeedField != null)
+                    {
+                        originalWalkSpeed = (float)walkSpeedField.GetValue(playerMovementScript);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Không tìm thấy trường _walkSpeed trong MultiplayerController.");
+                    }
+
+                    if (runSpeedField != null)
+                    {
+                        originalRunSpeed = (float)runSpeedField.GetValue(playerMovementScript);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Không tìm thấy trường _runSpeed trong MultiplayerController.");
+                    }
                 }
             }
         }
     }
 
     // Cập nhật số lượng anomaly trong giao diện người dùng
-    public void UpdateAnomalyCountUI(int anomaliesFound, int totalAnomalies)
+    public void UpdateAnomalyCountUI(int processedAnomalies, int totalAnomalies)
     {
-        anomalyCountText.text = $"Vật thể bất thường: {anomaliesFound}/{totalAnomalies}";
+        anomalyCountText.text = $"Vật thể bất thường: {processedAnomalies}/{totalAnomalies}";
     }
 
     // Cập nhật thời gian còn lại trong giao diện
@@ -167,11 +184,29 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         if (playerMovementScript != null)
         {
-            playerMovementScript.GetType().GetField(walkSpeedFieldName)?.SetValue(playerMovementScript, 0f);
-            playerMovementScript.GetType().GetField(runSpeedFieldName)?.SetValue(playerMovementScript, 0f);
+            if (walkSpeedField != null)
+            {
+                walkSpeedField.SetValue(playerMovementScript, 0f);
+            }
+            else
+            {
+                Debug.LogWarning("Field _walkSpeed is null, unable to disable player movement.");
+            }
+
+            if (runSpeedField != null)
+            {
+                runSpeedField.SetValue(playerMovementScript, 0f);
+            }
+            else
+            {
+                Debug.LogWarning("Field _runSpeed is null, unable to disable player movement.");
+            }
         }
 
-        if (cameraUIScript != null) cameraUIScript.enabled = false;
+        if (cameraUIScript != null)
+        {
+            cameraUIScript.enabled = false;
+        }
     }
 
     [PunRPC]
@@ -179,10 +214,28 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
         if (playerMovementScript != null)
         {
-            playerMovementScript.GetType().GetField(walkSpeedFieldName)?.SetValue(playerMovementScript, originalWalkSpeed);
-            playerMovementScript.GetType().GetField(runSpeedFieldName)?.SetValue(playerMovementScript, originalRunSpeed);
+            if (walkSpeedField != null)
+            {
+                walkSpeedField.SetValue(playerMovementScript, originalWalkSpeed);
+            }
+            else
+            {
+                Debug.LogWarning("Field _walkSpeed is null, unable to enable player movement.");
+            }
+
+            if (runSpeedField != null)
+            {
+                runSpeedField.SetValue(playerMovementScript, originalRunSpeed);
+            }
+            else
+            {
+                Debug.LogWarning("Field _runSpeed is null, unable to enable player movement.");
+            }
         }
 
-        if (cameraUIScript != null) cameraUIScript.enabled = true;
+        if (cameraUIScript != null)
+        {
+            cameraUIScript.enabled = true;
+        }
     }
 }

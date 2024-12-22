@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnomalyScanner : MonoBehaviour
 {
     public Transform player; // Tham chiếu đến player
-    public float scanRadius = 50f; // Bán kính quét xung quanh player
+    public float scanRadius = 20f; // Bán kính quét xung quanh player
     public SUserInterfaceManager SUIManager; // Tham chiếu đến UIManager để cập nhật UI
 
     void Update()

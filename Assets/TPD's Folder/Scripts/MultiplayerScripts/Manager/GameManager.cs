@@ -5,9 +5,9 @@ using Photon.Pun;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    [Header("Game Stats")]
-    [SerializeField] private int totalAnomalies;        // Tổng số anomalies trong game
-    [SerializeField] public int anomaliesFound = 0;     // Số anomalies đã tìm thấy
+    [Header("Game Stats")]    
+    public int totalAnomalies = 0; // Tổng số anomalies trong game
+    public HashSet<int> anomaliesProcessed = new HashSet<int>();
     [SerializeField][Range(0f, 1f)] private float victoryThreshold = 0.8f; // Tỷ lệ chiến thắng (phần trăm anomalies cần tìm để thắng)
     private bool gameEnded = false;   // Trạng thái game (đã kết thúc hay chưa)
 
@@ -17,13 +17,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Singleton instance (dùng để quản lý đối tượng game manager)
     public static GameManager instance;
 
-    private CameraUI cameraUI;
-    private UIManager uiManager;  // Quản lý giao diện người dùng
-    public HashSet<GameObject> anomaliesProcessed = new HashSet<GameObject>();  // Tập hợp các anomalies đã được xử lý (tìm thấy hoặc đã xóa)
+    public CameraUI cameraUI;
+    public UIManager uiManager;  // Quản lý giao diện người dùng
+
+
 
     public AudioSource GameOver;
 
     public AudioSource Win;
+
+    private int playersOutOfBattery = 0;
+    private int totalPlayers = 0;
 
     private void Awake()
     {
@@ -38,6 +42,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        totalPlayers = PhotonNetwork.PlayerList.Length;
         cameraUI = FindObjectOfType<CameraUI>();
         uiManager = FindObjectOfType<UIManager>();  // Tìm và gán SUserInterfaceManager
         timer = gameDuration;  // Khởi tạo thời gian
@@ -48,8 +53,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Reset UI ngay lập tức để tránh hiển thị sai thông tin
         uiManager.ResetUI();
 
+        // Tìm tất cả anomaly trong scene và đếm tổng số anomalies
+        totalAnomalies = GameObject.FindGameObjectsWithTag("Anomaly").Length;
+
         // Cập nhật UI ban đầu
-        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+        uiManager.UpdateAnomalyCountUI(anomaliesProcessed.Count, totalAnomalies);
 
         // Bắt đầu game và spawn anomalies
         if (PhotonNetwork.IsMasterClient)
@@ -71,7 +79,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (totalAnomalies > 0)
         {
             Debug.Log("Trò chơi đã bắt đầu! Tổng anomalies: " + totalAnomalies);
-            uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+            uiManager.UpdateAnomalyCountUI(anomaliesProcessed.Count, totalAnomalies);
 
             // Gọi HideCountDownPanel khi tất cả anomalies đã spawn xong
             uiManager.HideCountDownPanel();
@@ -146,23 +154,54 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void CheckAllPlayersOutOfBattery()
+    {
+        playersOutOfBattery++;
+
+        // Nếu tất cả người chơi đều hết pin, gọi hàm kết thúc game
+        if (playersOutOfBattery >= totalPlayers)
+        {
+            EndGame(false);  // Thua game
+        }
+    }
+
     // Phương thức thông báo khi tìm thấy anomaly
     [PunRPC]
     public void NotifyAnomalyFound(int anomalyViewID)
     {
+        Debug.Log("Received NotifyAnomalyFound RPC with ViewID: " + anomalyViewID);
         GameObject anomaly = PhotonView.Find(anomalyViewID)?.gameObject;  // Retrieve anomaly from PhotonView ID
-        if (anomaly != null && !anomaliesProcessed.Contains(anomaly))
-        {
-            anomaliesProcessed.Add(anomaly);
-            anomaliesFound++;  // Tăng số anomaly đã tìm
 
-            Debug.Log("Anomaly found! Total anomalies found: " + anomaliesFound);
+        if (anomaly != null)
+        {
+            // Tăng số anomalies đã xử lý
+            anomaliesProcessed.Add(anomalyViewID);  // Thêm anomaly vào HashSet
+
+            // Chờ đến khi anomaly thực sự được xóa
+            photonView.RPC("ConfirmAnomalyDestruction", RpcTarget.All, anomalyViewID);
+        }
+        else
+        {
+            Debug.LogWarning("Anomaly not found for ViewID: " + anomalyViewID);
+        }
+    }
+
+    // RPC để xác nhận xóa anomaly và cập nhật anomaliesFound
+    [PunRPC]
+    public void ConfirmAnomalyDestruction(int anomalyViewID)
+    {
+        GameObject anomaly = PhotonView.Find(anomalyViewID)?.gameObject;
+
+        if (anomaly != null)
+        {
+            // Đảm bảo rằng anomaly đã được xử lý và không bị lặp lại
+            Debug.Log("Anomaly found! Total anomalies found: " + anomaliesProcessed);
 
             // Tăng thời gian game mỗi khi tìm thấy anomaly
-            timer += 10f;
+            timer += 20f;
 
-            // Kiểm tra và phục hồi pin mỗi khi tìm thấy 5 anomalies
-            if (anomaliesFound % 5 == 0)
+            // Kiểm tra và phục hồi pin mỗi khi tìm thấy 3 anomalies
+            if (anomaliesProcessed.Count % 3 == 0)
             {
                 RestoreBatteryLevel(1); // Restores 1 level of battery
             }
@@ -170,15 +209,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             cameraUI.timePassed -= 5; // Điều chỉnh thời gian đã trôi qua cho việc cạn pin
 
             // Cập nhật UI với số anomalies đã tìm và thời gian còn lại
-            uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies - anomaliesProcessed.Count);
+            uiManager.UpdateAnomalyCountUI(anomaliesProcessed.Count, totalAnomalies);
             uiManager.UpdateTimerUI(timer);
 
             // Kiểm tra điều kiện kết thúc game
-            CheckGameOver();
-        }
-        else
-        {
-            Debug.LogWarning("Anomaly not found.");
         }
     }
 
@@ -198,31 +232,18 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // Kiểm tra điều kiện kết thúc game
-    private void CheckGameOver()
+    public void CheckVictoryCondition()
     {
-        float requiredAnomalies = totalAnomalies * victoryThreshold;  // Tính toán số anomalies cần thiết để thắng
-        if (anomaliesFound >= requiredAnomalies)
+        if (anomaliesProcessed.Count == totalAnomalies)
         {
-            // Phát âm thanh khi thắng
-            if (Win != null)
-            {
-                Win.Play();
-            }
-            UnlockCursor(); // Mở khóa trỏ chuột để tương tác khi chiến thắng
-            EndGame(true);  // Chiến thắng nếu số anomalies cần tìm đã đủ
+            EndGame(true); // Victory
         }
         else if (timer <= 0f)
         {
-            // Phát âm thanh khi thua
-            if (GameOver != null)
-            {
-                GameOver.Play();
-            }
-            UnlockCursor();  // Mở khóa trỏ chuột để tương tác khi thua
-            EndGame(false);  // Thua nếu hết thời gian
+            EndGame(false); // Defeat
         }
     }
+
 
     // Phương thức kết thúc game
     public void EndGame(bool victory)
@@ -247,17 +268,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         uiManager.ShowEndGameUI(victory); // Gọi phương thức để hiển thị kết quả thắng/thua
     }
 
-    // Phương thức reset lại game
     public void ResetGame()
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
         gameEnded = false;
-        anomaliesFound = 0;
+        anomaliesProcessed.Clear(); 
         timer = gameDuration;
-        anomaliesProcessed.Clear();
 
-        uiManager.UpdateAnomalyCountUI(anomaliesFound, totalAnomalies);
+        uiManager.UpdateAnomalyCountUI(anomaliesProcessed.Count, totalAnomalies);
         uiManager.UpdateTimerUI(timer);
 
         Debug.Log("Game has been reset.");
@@ -265,6 +284,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Spawn lại anomalies nếu là MasterClient
         StartCoroutine(WaitForAnomaliesToSpawn());
     }
+
 
     // Phương thức quay lại menu chính khi bấm nút
     public void OnClickBackToMenu()
